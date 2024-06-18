@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import './App.css'
+import './assets/css/App.css'
 import Book from './components/Book'
 // import Counter from './components/Counter'
+import Navbar from './components/Navbar';
 import Login from './components/Login'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
 
       {/* <Counter /> */}
 
+      <Navbar />
       <Login setLoginCheck={setLoginCheck} loginCheck={loginCheck} />
       <Book loginCheck={loginCheck} />
 

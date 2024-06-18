@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import axios from 'axios';
+import Navbar from './Navbar';
 
 interface Book {
   _id: string;
@@ -56,6 +57,7 @@ function Book({ loginCheck }: BookProps) {
 
   return (
     <>
+    <Navbar />
       {/* Rendering dei titoli dei libri */}
       <div>
         <h1>Book.tsx</h1>
