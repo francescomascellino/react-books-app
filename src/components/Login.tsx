@@ -53,22 +53,27 @@ function Login({ setLoginCheck, loginCheck }: LoginProps) {
 
         <form action="" onSubmit={handleLogin}>
 
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          {/* Mostra il form di login se l'utente non è loggato */}
+          {!loginCheck &&
+            (<div>
+              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            </div>)
+          }
 
           <div>
+            {/* Mostra il pulsante login se l'utente non è loggato */}
             {!loginCheck &&
               (<button type="submit" >Login</button>)
             }
-            {/* <button type="submit" >Login</button> */}
+
+            {/* Mostra il pulsante logout se l'utente è loggato */}
+            {loginCheck &&
+              (<button onClick={handleLogout}>Logout</button>)
+            }
           </div>
 
         </form>
-
-        {/* Mostra il pulsante logout se l'utente è loggato */}
-        {loginCheck &&
-          (<button onClick={handleLogout}>Logout</button>)
-        }
 
         {error && <p style={{ color: 'red' }}>{error}</p>}
 

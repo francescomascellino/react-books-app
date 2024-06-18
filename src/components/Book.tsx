@@ -38,10 +38,12 @@ function Book({ loginCheck }: BookProps) {
       }
     };
 
+    // Se l'utente è loggato effettua la chiamata API
     if (loginCheck) {
       fetchBooks();
     }
 
+    // Se l'utente non è loggato svuota la lista dei libri
     if (!loginCheck) {
       setBooks([]);
     }
@@ -57,6 +59,8 @@ function Book({ loginCheck }: BookProps) {
       {/* Rendering dei titoli dei libri */}
       <div>
         <h1>Book.tsx</h1>
+
+        {/* Mostra un titolo diverso a seconda se l'utente sia loggato o meno */}
         {
           loginCheck ? (
             <h2>Lista dei titoli dei libri:</h2>
