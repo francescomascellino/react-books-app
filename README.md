@@ -35,3 +35,71 @@ npm install mobx mobx-react-lite
 npm install axios
 npm install react-router-dom
 ```
+
+## Uso di js-cookie
+
+```bash
+npm install js-cookie
+```
+
+```ts
+import axios from 'axios';
+import Cookies from 'js-cookie'; // Importare js-cookie
+
+class AuthStore {
+  token: string | null = Cookies.get('token') || null;
+  userName: string | null = Cookies.get('userName') || null;
+  error: string | null = null;
+
+  async login(username: string, password: string) {
+    try {
+      const response = await axios.post('http://localhost:3000/auth/login', { username, password });
+
+      console.log(response);
+
+      const token = response.data.access_token;
+      this.token = token;
+
+      // Set Cookie. Il token scadrà in 7 giorni
+      Cookies.set('token', token, { expires: 7 });
+      this.userName = username;
+
+      // Set Cookie. Il token scadrà in 7 giorni
+      Cookies.set('userName', this.userName, { expires: 7 });
+
+      console.log('Token from store:', this.token);
+      console.log('Username from store:', this.userName);
+
+      this.error = null;
+
+    } catch (error) {
+      // Remove Cookie
+      Cookies.remove('userName');
+      this.userName = null;
+
+      // Remove Cookie
+      Cookies.remove('token');
+      this.token = null;
+
+      console.error('Login failed:', error);
+      this.error = 'Invalid username or password!';
+      throw error;
+    }
+  }
+
+  logout() {
+    this.error = null;
+    this.token = null;
+    this.userName = null;
+
+    // Remove Cookie
+    Cookies.remove('token');
+
+    // Remove Cookie
+    Cookies.remove('userName');
+  }
+}
+
+const authStore = new AuthStore();
+export default authStore;
+```

@@ -15,13 +15,6 @@ class AuthStore {
     });
   }
 
-  /*   login(token: string, userName: string) {
-      this.token = token;
-      localStorage.setItem('token', token);
-      this.userName = userName;
-      localStorage.setItem('userName', userName)
-    } */
-
   async login(username: string, password: string) {
     try {
       const response = await axios.post('http://localhost:3000/auth/login', { username, password });
