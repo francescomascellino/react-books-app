@@ -1,45 +1,19 @@
 
-import { useEffect, useState } from 'react'
-import axios from 'axios';
+import { useEffect } from 'react'
+// import axios from 'axios';
 import Navbar from './Navbar';
+import { useBookStore } from '../stores/book/bookStore';
 
-interface Book {
-  _id: string;
-  title: string;
-  // Altri campi dei libri, se presenti
-}
-
-interface LoginCheckProops {
+interface LoginCheckProps {
   loginCheck: boolean;
 }
 
 function Book(
-  { loginCheck }: LoginCheckProops
+  { loginCheck }: LoginCheckProps
 ) {
-  // Dichiarazione esplicita del tipo Book[]
-  const [books, setBooks] = useState<Book[]>([]);
+  const { books, fetchBooks, fetchSingleBook, setBooks } = useBookStore();
 
   useEffect(() => {
-
-    const fetchBooks = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('Token not found in localStorage');
-        }
-
-        const response = await axios.get('http://localhost:3000/book/', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        console.log('Books:', response.data);
-        setBooks(response.data);
-      } catch (error) {
-        console.error('Failed to fetch books:', error);
-      }
-    };
 
     // Se l'utente è loggato effettua la chiamata API
     if (loginCheck) {
@@ -47,31 +21,22 @@ function Book(
     }
 
     // Se l'utente non è loggato svuota la lista dei libri
-    if (!loginCheck) {
-      setBooks([]);
+    else {
+      console.log("User must be logged in");
+      setBooks([])
     }
 
   },
     // [] MEANS THE EFFECT WILL RUN ONCE AND NEVER AGAIN.
     // [count] MEANS THE EFFECT WILL RUN EVERY TIME count CHANGES.
     // WRITE NOTHING (EVENT THE BRACLETS) IF YOU WANT THAT THE EFFECT WILL RUN EVERY TIME THERE IS A CHANGE
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [loginCheck]);
 
-  const fetchSingleBook = async (bookId: string) => {
+  const handleFetchSingleBook = async (bookId: string) => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Token not found in localStorage');
-      }
-
-      const response = await axios.get(`http://localhost:3000/book/${bookId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      console.log('Single Book:', response.data);
-      // Restituisci il libro ottenuto, ma per ora lo console.log
+      await fetchSingleBook(bookId);
     } catch (error) {
       console.error(`Failed to fetch book with ID ${bookId}:`, error);
     }
@@ -94,7 +59,7 @@ function Book(
         {books.map(book => (
           <p
             className='book'
-            key={book._id} onClick={() => fetchSingleBook(book._id)}>{book.title}</p>
+            key={book._id} onClick={() => handleFetchSingleBook(book._id)}>{book.title}</p>
         ))}
       </div>
 
