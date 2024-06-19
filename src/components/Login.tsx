@@ -56,7 +56,8 @@ function Login({ setLoginCheck, loginCheck }: LoginProps) {
 
   return (
     <>
-      <h1>Login Page</h1>
+      <h1>Login.tsx</h1>
+      <hr />
       <div>
 
         <form action="" onSubmit={handleLogin}>

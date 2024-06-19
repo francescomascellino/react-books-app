@@ -39,7 +39,7 @@ export const useBookStore = () => {
     try {
       const token = localStorage.getItem('token');
       console.log('GOT TOKEN');
-      
+
       if (!token) {
         throw new Error('Token not found in localStorage');
       }

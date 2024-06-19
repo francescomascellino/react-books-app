@@ -35,21 +35,14 @@ function Book(
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [loginCheck]);
 
-/*   const handleFetchSingleBook = async (bookId: string) => {
-    try {
-      await fetchSingleBook(bookId);
-    } catch (error) {
-      console.error(`Failed to fetch book with ID ${bookId}:`, error);
-    }
-  }; */
-
   return (
     <>
       <Navbar />
       <h1>Book.tsx</h1>
       <div className="book-container">
+
         <div className="book-list">
-          
+
           {loginCheck ? (
             <h2>Lista dei titoli dei libri:</h2>
           ) : (

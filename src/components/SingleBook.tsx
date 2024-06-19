@@ -7,13 +7,13 @@ const SingleBook = () => {
   const { fetchSingleBook, singleBook } = useBookStore();
 
   console.log(bookID);
-  
+
 
   useEffect(() => {
     if (bookID) {
       fetchSingleBook(bookID);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookID]);
 
   if (!singleBook) {
@@ -22,8 +22,9 @@ const SingleBook = () => {
 
   return (
     <div>
-      <h1>{singleBook.title}</h1>
-      <p>Author: {singleBook.author}</p>
+      <h1>SingleBook.tsx</h1>
+      <h2>{singleBook.title}</h2>
+      <p>Autore: {singleBook.author}</p>
       <p>ISBN: {singleBook.ISBN}</p>
     </div>
   );
