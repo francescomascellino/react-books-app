@@ -57,9 +57,29 @@ function Book(
     // WRITE NOTHING (EVENT THE BRACLETS) IF YOU WANT THAT THE EFFECT WILL RUN EVERY TIME THERE IS A CHANGE
     [loginCheck]);
 
+  const fetchSingleBook = async (bookId: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      const response = await axios.get(`http://localhost:3000/book/${bookId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log('Single Book:', response.data);
+      // Restituisci il libro ottenuto, ma per ora lo console.log
+    } catch (error) {
+      console.error(`Failed to fetch book with ID ${bookId}:`, error);
+    }
+  };
+
   return (
     <>
-    <Navbar />
+      <Navbar />
       {/* Rendering dei titoli dei libri */}
       <div>
         <h1>Book.tsx</h1>
@@ -72,7 +92,9 @@ function Book(
         }
 
         {books.map(book => (
-          <p key={book._id}>{book.title}</p>
+          <p
+            className='book'
+            key={book._id} onClick={() => fetchSingleBook(book._id)}>{book.title}</p>
         ))}
       </div>
 

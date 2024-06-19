@@ -10,8 +10,8 @@ class AuthStore {
     makeObservable(this, {
       token: observable,
       userName: observable,
-      login: action,
-      logout: action,
+      login: action.bound,
+      logout: action.bound,
     });
   }
 
@@ -19,29 +19,29 @@ class AuthStore {
     try {
       const response = await axios.post('http://localhost:3000/auth/login', { username, password });
 
-      console.log(response);
+      console.log(`Username: ${username}, Password: ${password}`);
 
       const token = response.data.access_token;
       this.token = token;
       localStorage.setItem('token', token);
 
-
       this.userName = username;
       localStorage.setItem('userName', this.userName);
 
+      this.error = null;      
+
       console.log('Token from store:', this.token);
       console.log('Username from store:', this.userName);
-
-      this.error = null;
-
+      return Promise.resolve(this.token);
     } catch (error) {
       localStorage.removeItem('userName');
       this.userName = null;
       localStorage.removeItem('token');
       this.token = null;
-      console.error('Login failed:', error);
       this.error = 'Invalid username or password!';
-      throw error;
+      console.error('Login failed:', error);      
+      // throw error;
+      return Promise.reject(error);
     }
   }
 

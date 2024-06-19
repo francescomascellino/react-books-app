@@ -1,6 +1,7 @@
 
 import { Dispatch, SetStateAction, useState } from 'react';
-import authStore from '../stores/auth/authStore';
+// import authStore from '../stores/auth/authStore';
+import { useAuthStore } from '../stores/auth/useAuthStore';
 
 interface LoginProps {
   setLoginCheck: Dispatch<SetStateAction<boolean>>;
@@ -13,33 +14,40 @@ function Login({ setLoginCheck, loginCheck }: LoginProps) {
   const [error, setError] = useState<string | null>(null);
   // const [loginCheck, setLoginCheck] = useState(false)
 
+  const { login, logout } = useAuthStore();
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      await authStore.login(username, password);
+      await login(username, password);
       console.log('Login successful');
+
+      console.log('Token after login:', localStorage.getItem('token'));
+
       setUsername(''); // Svuota il campo username
       setPassword(''); // Svuota il campo password
       setError(''); // Svuota il error
 
-      if (authStore.token !== null) {
+      if (localStorage.getItem('token') !== null) {
         // console.log('Token from AuthStore:', authStore.token);
         setLoginCheck(true)
+        console.log(`Can login Again? ${loginCheck}`);
       }
 
     } catch (error) {
       console.error('Login failed:', error);
-      setError(`${authStore.error}`);
+      setError(`${error}`);
     }
   };
 
   const handleLogout = () => {
-    authStore.logout();
+    logout();
     setError('');
 
-    if (authStore.token === null) {
-      // console.log('Token from AuthStore:', authStore.token);
+    if (localStorage.getItem('token') === null) {
+      console.log('Token after logout:', localStorage.getItem('token'));
       setLoginCheck(false)
+      console.log(`Can login Again? ${loginCheck}`);
     }
 
     console.log('Logout successful');
