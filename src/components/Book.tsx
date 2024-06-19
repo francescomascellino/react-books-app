@@ -9,11 +9,13 @@ interface Book {
   // Altri campi dei libri, se presenti
 }
 
-interface BookProps {
+interface LoginCheckProops {
   loginCheck: boolean;
 }
 
-function Book({ loginCheck }: BookProps) {
+function Book(
+  { loginCheck }: LoginCheckProops
+) {
   // Dichiarazione esplicita del tipo Book[]
   const [books, setBooks] = useState<Book[]>([]);
 
