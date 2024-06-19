@@ -1,8 +1,9 @@
 
 import { useEffect } from 'react'
-// import axios from 'axios';
 import Navbar from './Navbar';
 import { useBookStore } from '../stores/book/bookStore';
+import { Link, Outlet } from 'react-router-dom';
+import '../assets/css/book.css'
 
 interface LoginCheckProps {
   loginCheck: boolean;
@@ -11,7 +12,7 @@ interface LoginCheckProps {
 function Book(
   { loginCheck }: LoginCheckProps
 ) {
-  const { books, fetchBooks, fetchSingleBook, setBooks } = useBookStore();
+  const { books, fetchBooks, setBooks } = useBookStore();
 
   useEffect(() => {
 
@@ -34,35 +35,36 @@ function Book(
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [loginCheck]);
 
-  const handleFetchSingleBook = async (bookId: string) => {
+/*   const handleFetchSingleBook = async (bookId: string) => {
     try {
       await fetchSingleBook(bookId);
     } catch (error) {
       console.error(`Failed to fetch book with ID ${bookId}:`, error);
     }
-  };
+  }; */
 
   return (
     <>
       <Navbar />
-      {/* Rendering dei titoli dei libri */}
-      <div>
-        <h1>Book.tsx</h1>
-
-        {/* Mostra un titolo diverso a seconda se l'utente sia loggato o meno */}
-        {
-          loginCheck ? (
+      <h1>Book.tsx</h1>
+      <div className="book-container">
+        <div className="book-list">
+          
+          {loginCheck ? (
             <h2>Lista dei titoli dei libri:</h2>
-          ) : <h2>Effettua il Login per accedere alla lista dei libri</h2>
-        }
-
-        {books.map(book => (
-          <p
-            className='book'
-            key={book._id} onClick={() => handleFetchSingleBook(book._id)}>{book.title}</p>
-        ))}
+          ) : (
+            <h2>Effettua il Login per accedere alla lista dei libri</h2>
+          )}
+          {books.map(book => (
+            <Link key={book._id} to={`/books/${book._id}`}>
+              <p className="book">{book.title}</p>
+            </Link>
+          ))}
+        </div>
+        <div className="book-details">
+          <Outlet />
+        </div>
       </div>
-
     </>
   )
 }

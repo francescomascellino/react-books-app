@@ -43,13 +43,3 @@
 .read-the-docs {
   color: #888;
 }
-
-.book {
-  cursor: pointer;
-  color: #ffffffde;
-  transition: color 0.3s ease;
-}
-
-.book:hover {
-  color: #646cff;
-}

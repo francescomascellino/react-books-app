@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "../App";
 import { AuthProvider } from "../stores/auth/AuthProvider";
 import Book from "./Book";
+import SingleBook from "./SingleBook";
 
 const Root = () => {
   const [loginCheck, setLoginCheck] = useState(false);
@@ -15,6 +16,13 @@ const Root = () => {
     {
       path: "/books",
       element: <Book loginCheck={loginCheck} />,
+      children: [
+        {
+          path: ":bookID",
+          element: <SingleBook />
+        }
+
+      ],
     },
   ]);
 

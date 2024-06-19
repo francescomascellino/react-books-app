@@ -1,0 +1,29 @@
+.book-container {
+  display: flex;
+}
+
+.book-list {
+  width: 30%;
+  padding: 10px;
+  border: 1px solid red;
+}
+
+.book-details {
+  width: 70%;
+  padding: 10px;
+  border: 1px solid greenyellow;
+}
+
+.book {
+  cursor: pointer;
+  color: #ffffffde;
+  transition: color 0.3s ease;
+}
+
+.book:hover {
+  color: #646cff;
+}
+
+nav {
+  border: 1px solid blue
+}

@@ -62,6 +62,7 @@ export const useBookStore = () => {
 
   return {
     books,
+    singleBook,
     setBooks,
     fetchBooks,
     fetchSingleBook,
