@@ -21,3 +21,8 @@
 .book:hover {
   color: #646cff;
 }
+
+.edit-book {
+  display: flex;
+  flex-direction: column;
+}

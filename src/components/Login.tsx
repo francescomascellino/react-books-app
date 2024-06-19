@@ -64,10 +64,18 @@ function Login({ setLoginCheck, loginCheck }: LoginProps) {
 
           {/* Mostra il form di login se l'utente non è loggato */}
           {!loginCheck &&
-            (<div>
-              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>)
+            (<>
+              <div className="form-group">
+                <label htmlFor="username">Username</label>
+                <input type="text" id='username' value={username} onChange={(e) => setUsername(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input type="password" id='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+              </div>
+            </>
+
+            )
           }
 
           <div>

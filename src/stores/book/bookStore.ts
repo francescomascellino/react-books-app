@@ -6,8 +6,11 @@ interface Book {
   title: string;
   ISBN: string;
   author: string;
-  is_deleted: boolean;
-  // Altri campi dei libri, se presenti
+  is_deleted?: boolean; // Campo opzionale
+  loaned_to?: {
+    _id: string;
+    name: string;
+  } | null; // Campo opzionale
 }
 
 export const useBookStore = () => {

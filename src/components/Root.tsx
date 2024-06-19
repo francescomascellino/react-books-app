@@ -4,6 +4,7 @@ import App from "../App";
 import { AuthProvider } from "../stores/auth/AuthProvider";
 import Book from "./Book";
 import SingleBook from "./SingleBook";
+import EditBook from "./EditBook";
 
 const Root = () => {
   const [loginCheck, setLoginCheck] = useState(false);
@@ -19,9 +20,12 @@ const Root = () => {
       children: [
         {
           path: ":bookID",
-          element: <SingleBook />
+          element: <SingleBook loginCheck={loginCheck} />
+        },
+        {
+          path: ":bookID/edit",
+          element: <EditBook loginCheck={loginCheck} />
         }
-
       ],
     },
   ]);
