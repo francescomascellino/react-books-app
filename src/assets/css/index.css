@@ -78,6 +78,14 @@ button:focus-visible {
   width: 20%;
 }
 
+.card {
+  border: 1px solid #646cff;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  box-shadow: 2px 2px 5px #646cff;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

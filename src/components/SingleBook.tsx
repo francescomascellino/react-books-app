@@ -35,11 +35,13 @@ function SingleBook(
 
         {loginCheck ? (
           <>
-            <h2>{singleBook.title}</h2>
-            <p>Autore: {singleBook.author}</p>
-            <p>ISBN: {singleBook.ISBN}</p>
-            {singleBook.loaned_to && <p>Affittato a {singleBook.loaned_to.name}</p>}
-            <Link to={`/books/${bookID}/edit`}>Modifica</Link>
+            <div className="card">
+              <h2>{singleBook.title}</h2>
+              <p>Autore: {singleBook.author}</p>
+              <p>ISBN: {singleBook.ISBN}</p>
+              {singleBook.loaned_to && <p>Affittato a {singleBook.loaned_to.name}</p>}
+            </div>
+            <Link to={`/books/${bookID}/edit`}><button>Modifica</button></Link>
           </>
         ) : (
           <h2>Effettua il Login per accedere ai dettagli del libro</h2>
