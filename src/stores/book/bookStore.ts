@@ -41,8 +41,6 @@ export const useBookStore = () => {
   const fetchSingleBook = async (bookId: string) => {
     try {
       const token = localStorage.getItem('token');
-      console.log('GOT TOKEN');
-
       if (!token) {
         throw new Error('Token not found in localStorage');
       }
@@ -53,15 +51,38 @@ export const useBookStore = () => {
         },
       });
 
-      console.log("GOT RESPONSE");
-
       setSingleBook(response.data);
-      // console.log('Single Book:', response.data);
       console.log('singleBook:', singleBook);
     } catch (error) {
       console.error(`Failed to fetch book with ID ${bookId}:`, error);
     }
   };
+
+  const updateBook = async (bookId: string, updatedBook: Partial<Book>) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      const response = await axios.patch<Book>(`http://localhost:3000/book/${bookId}`, updatedBook, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log('Updated Book:', response.data);
+      // Aggiorna il libro nel singleBook o nella lista books, a seconda dell'implementazione
+      // Esempio:
+      setSingleBook(response.data); // Aggiorna il singleBook con i nuovi dati
+      // Oppure:
+      const updatedBooks = books.map(book => (book._id === bookId ? response.data : book));
+      setBooks(updatedBooks); // Aggiorna la lista dei libri
+    } catch (error) {
+      console.error(`Failed to update book with ID ${bookId}:`, error);
+      throw error; // Rilancia l'errore per gestione futura
+    }
+  }
 
   return {
     books,
@@ -69,5 +90,6 @@ export const useBookStore = () => {
     setBooks,
     fetchBooks,
     fetchSingleBook,
+    updateBook,
   };
 };

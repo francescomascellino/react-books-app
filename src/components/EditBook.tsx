@@ -10,11 +10,12 @@ interface LoginCheckProps {
 function EditBook(
   { loginCheck }: LoginCheckProps
 ) {
-  const { bookID } = useParams();
-  const { singleBook, fetchSingleBook } = useBookStore();
+  const { bookID } = useParams<{ bookID?: string }>();
+  const { singleBook, fetchSingleBook, updateBook } = useBookStore();
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [ISBN, setISBN] = useState('');
+  const [validationError, setValidationError] = useState('');
 
   useEffect(() => {
     if (bookID) {
@@ -33,6 +34,25 @@ function EditBook(
     }
   }, [singleBook]);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      if (bookID) {
+        await updateBook(bookID, { title, author, ISBN });
+        console.log('Book updated successfully');
+
+        // Naviga alla pagina del singolo libro dopo l'aggiornamento
+      } else {
+        throw new Error('bookID non definito');
+      }
+    } catch (error) {
+      console.error('Failed to update book:', error);
+      // Gestisci gli errori di validazione qui, se necessario
+      setValidationError('Errore durante l\'aggiornamento del libro.');
+    }
+  };
+
   return (
     <>
       <div className="edit-book">
@@ -41,7 +61,7 @@ function EditBook(
         {loginCheck ? (
           <>
             <h2>Modifica Libro</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="title">Titolo</label>
                 <input
@@ -82,6 +102,7 @@ function EditBook(
                 }
               </div>
             </form>
+            {validationError && <p style={{ color: 'red' }}>{validationError}</p>}
           </>
         ) : (
           <h2>Effettua il Login per accedere al form di modifica del libro</h2>

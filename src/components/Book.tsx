@@ -33,7 +33,9 @@ function Book(
     // WRITE NOTHING (EVENT THE BRACLETS) IF YOU WANT THAT THE EFFECT WILL RUN EVERY TIME THERE IS A CHANGE
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [loginCheck]);
+    [loginCheck, 
+      // books MUST FIX LOOP
+    ]);
 
   return (
     <>
