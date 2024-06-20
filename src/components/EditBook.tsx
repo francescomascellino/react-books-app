@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useBookStore } from '../stores/book/bookStore';
+import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css';
 
-interface LoginCheckProps {
-  loginCheck: boolean;
-}
+// interface LoginCheckProps {
+//   loginCheck: boolean;
+// }
 
 function EditBook(
-  { loginCheck }: LoginCheckProps
+  // { loginCheck }: LoginCheckProps
 ) {
   const { bookID } = useParams<{ bookID?: string }>();
   const { singleBook, fetchSingleBook, updateBook } = useBookStore();
+  const { loginStatus } = useAuthStore();
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [ISBN, setISBN] = useState('');
@@ -58,7 +60,7 @@ function EditBook(
       <div className="edit-book">
         <h1>EditBook.tsx</h1>
 
-        {loginCheck ? (
+        {loginStatus ? (
           <>
             <h2>Modifica Libro</h2>
             <form onSubmit={handleSubmit}>

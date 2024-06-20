@@ -5,14 +5,25 @@ class AuthStore {
   token: string | null = localStorage.getItem('token') || null;
   userName: string | null = localStorage.getItem('userName') || null;
   error: string | null = null;
+  loginStatus: boolean = false;
 
   constructor() {
-    makeObservable(this, {
-      token: observable,
-      userName: observable,
-      login: action.bound,
-      logout: action.bound,
-    });
+    makeObservable(
+      this,
+      {
+        token: observable,
+        userName: observable,
+        login: action.bound,
+        logout: action.bound,
+        loginStatus: observable,
+        setLoginStatus: action.bound
+      }
+    );
+  }
+
+  setLoginStatus(value: boolean) {
+    this.loginStatus = value;
+    return this.loginStatus
   }
 
   async login(username: string, password: string) {
@@ -28,7 +39,7 @@ class AuthStore {
       this.userName = username;
       localStorage.setItem('userName', this.userName);
 
-      this.error = null;      
+      this.error = null;
 
       console.log('Token from store:', this.token);
       console.log('Username from store:', this.userName);
@@ -39,7 +50,7 @@ class AuthStore {
       localStorage.removeItem('token');
       this.token = null;
       this.error = 'Invalid username or password!';
-      console.error('Login failed:', error);      
+      console.error('Login failed:', error);
       // throw error;
       return Promise.reject(error);
     }

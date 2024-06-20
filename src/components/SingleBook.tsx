@@ -1,16 +1,18 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useBookStore } from '../stores/book/bookStore';
+import { useAuthStore } from "../stores/auth/useAuthStore";
 
-interface LoginCheckProps {
-  loginCheck: boolean;
-}
+// interface LoginCheckProps {
+//   loginCheck: boolean;
+// }
 
 function SingleBook(
-  { loginCheck }: LoginCheckProps
+  // { loginCheck }: LoginCheckProps
 ) {
   const { bookID } = useParams();
   const { fetchSingleBook, singleBook } = useBookStore();
+  const { loginStatus } = useAuthStore();
 
   console.log(bookID);
 
@@ -33,7 +35,7 @@ function SingleBook(
       <div>
         <h1>SingleBook.tsx</h1>
 
-        {loginCheck ? (
+        {loginStatus ? (
           <>
             <div className="card">
               <h2>{singleBook.title}</h2>

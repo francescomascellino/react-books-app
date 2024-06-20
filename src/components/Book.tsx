@@ -3,21 +3,26 @@ import { useEffect } from 'react'
 import Navbar from './Navbar';
 import { useBookStore } from '../stores/book/bookStore';
 import { Link, Outlet } from 'react-router-dom';
+import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css'
 
-interface LoginCheckProps {
-  loginCheck: boolean;
-}
+// interface LoginCheckProps {
+//   loginCheck: boolean;
+// }
 
 function Book(
-  { loginCheck }: LoginCheckProps
+  // { loginCheck }: LoginCheckProps
 ) {
   const { books, fetchBooks, setBooks } = useBookStore();
+  const { loginStatus } = useAuthStore();
 
   useEffect(() => {
 
     // Se l'utente è loggato effettua la chiamata API
-    if (loginCheck) {
+    if (
+      // loginCheck
+      loginStatus
+    ) {
       fetchBooks();
     }
 
@@ -33,7 +38,9 @@ function Book(
     // WRITE NOTHING (EVENT THE BRACLETS) IF YOU WANT THAT THE EFFECT WILL RUN EVERY TIME THERE IS A CHANGE
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [loginCheck, 
+    [
+      // loginCheck, 
+      loginStatus, 
       // books MUST FIX LOOP
     ]);
 
@@ -45,7 +52,7 @@ function Book(
 
         <div className="book-list">
 
-          {loginCheck ? (
+          {loginStatus ? (
             <h2>Lista dei titoli dei libri:</h2>
           ) : (
             <h2>Effettua il Login per accedere alla lista dei libri</h2>

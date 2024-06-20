@@ -1,20 +1,22 @@
 
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 // import authStore from '../stores/auth/authStore';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 
-interface LoginProps {
-  setLoginCheck: Dispatch<SetStateAction<boolean>>;
-  loginCheck: boolean;
-}
+// interface LoginProps {
+//   setLoginCheck: Dispatch<SetStateAction<boolean>>;
+//   loginCheck: boolean;
+// }
 
-function Login({ setLoginCheck, loginCheck }: LoginProps) {
+function Login(
+  //   setLoginCheck, loginCheck }: LoginProps
+  ) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   // const [loginCheck, setLoginCheck] = useState(false)
 
-  const { login, logout } = useAuthStore();
+  const { login, logout, setLoginStatus, loginStatus } = useAuthStore();
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -30,8 +32,10 @@ function Login({ setLoginCheck, loginCheck }: LoginProps) {
 
       if (localStorage.getItem('token') !== null) {
         // console.log('Token from AuthStore:', authStore.token);
-        setLoginCheck(true)
-        console.log(`Can login Again? ${loginCheck}`);
+        // setLoginCheck(true)
+        setLoginStatus(true)
+        console.log(`Can login Again? ${loginStatus}`);
+        // console.log(`Can login Again? ${loginCheck}`);
       }
 
     } catch (error) {
@@ -46,8 +50,10 @@ function Login({ setLoginCheck, loginCheck }: LoginProps) {
 
     if (localStorage.getItem('token') === null) {
       console.log('Token after logout:', localStorage.getItem('token'));
-      setLoginCheck(false)
-      console.log(`Can login Again? ${loginCheck}`);
+      // setLoginCheck(false);
+      setLoginStatus(false);
+      console.log(`Can login Again? ${loginStatus}`);
+      // console.log(`Can login Again? ${loginCheck}`);
     }
 
     console.log('Logout successful');
@@ -63,7 +69,7 @@ function Login({ setLoginCheck, loginCheck }: LoginProps) {
         <form action="" onSubmit={handleLogin}>
 
           {/* Mostra il form di login se l'utente non è loggato */}
-          {!loginCheck &&
+          {!loginStatus &&
             (<>
               <div className="form-group">
                 <label htmlFor="username">Username</label>
@@ -80,12 +86,12 @@ function Login({ setLoginCheck, loginCheck }: LoginProps) {
 
           <div>
             {/* Mostra il pulsante login se l'utente non è loggato */}
-            {!loginCheck &&
+            {!loginStatus &&
               (<button type="submit" >Login</button>)
             }
 
             {/* Mostra il pulsante logout se l'utente è loggato */}
-            {loginCheck &&
+            {loginStatus &&
               (<button onClick={handleLogout}>Logout</button>)
             }
           </div>
