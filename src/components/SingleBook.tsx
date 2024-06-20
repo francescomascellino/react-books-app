@@ -32,7 +32,7 @@ function SingleBook() {
             {/* Messaggio di stato */}
             {location.state?.message &&
               <div className="card">
-                {location.state?.message && <p style={{ color: 'green' }}>{location.state.message}</p>}
+                <p style={{ color: 'green' }}>{location.state.message}</p>
               </div>
             }
 
