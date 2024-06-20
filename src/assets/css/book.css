@@ -4,12 +4,16 @@
 }
 
 .book-list {
-  width: 30%;
+  width: 50%;
   padding: 10px;
 }
 
+.book-list-wrapper {
+  min-height: 300px;
+}
+
 .book-details {
-  width: 70%;
+  width: 50%;
   padding: 10px;
 }
 

@@ -13,26 +13,40 @@ interface Book {
   } | null; // Campo opzionale
 }
 
+interface PaginatedBooks {
+  docs: Book[];
+  totalDocs: number;
+  limit: number;
+  page: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  nextPage: number | null;
+  prevPage: number | null;
+}
+
 export const useBookStore = () => {
   // Dichiarazione esplicita del tipo Book
   const [books, setBooks] = useState<Book[]>([]);
   const [singleBook, setSingleBook] = useState<Book | undefined>(undefined);
+  const [pagination, setPagination] = useState<PaginatedBooks | undefined>(undefined);
 
-  const fetchBooks = async () => {
+  const fetchBooks = async (page: number = 1, pageSize: number = 10) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('Token not found in localStorage');
       }
 
-      const response = await axios.get<Book[]>('http://localhost:3000/book/', {
+      const response = await axios.get<PaginatedBooks>(`http://localhost:3000/book?page=${page}&pageSize=${pageSize}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       console.log('Books:', response.data);
-      setBooks(response.data);
+      setBooks(response.data.docs);
+      setPagination(response.data);
     } catch (error) {
       console.error('Failed to fetch books:', error);
     }
@@ -87,6 +101,7 @@ export const useBookStore = () => {
   return {
     books,
     singleBook,
+    pagination,
     setBooks,
     fetchBooks,
     fetchSingleBook,
