@@ -77,7 +77,8 @@ function EditBook() {
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  // minLength={2}
+                  minLength={2}
+                  maxLength={50}
                   required
                 />
               </div>
@@ -88,7 +89,8 @@ function EditBook() {
                   id="author"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
-                  // minLength={3}
+                  minLength={3}
+                  maxLength={50}
                   required
                 />
               </div>
@@ -100,6 +102,7 @@ function EditBook() {
                   value={ISBN}
                   onChange={(e) => setISBN(e.target.value)}
                   minLength={13}
+                  maxLength={13}
                   required
                 />
               </div>
