@@ -38,9 +38,8 @@ function EditBook() {
       if (bookID) {
         await updateBook(bookID, { title, author, ISBN });
         console.log('Book updated successfully');
-        // navigate(`/books/${bookID}`); // Usa Navigator di Router-Dom per tornare alla scheda del libro editato
-
-        navigate(`/books/${bookID}`, { state: { message: 'Libro aggiornato con successo' } }); // Naviga alla pagina del singolo libro con un messaggio di successo
+        // Naviga alla pagina del singolo libro con un messaggio di successo
+        navigate(`/books/${bookID}`, { state: { message: 'Libro aggiornato con successo' } });
       } else {
         throw new Error('Libro non trovato');
       }
