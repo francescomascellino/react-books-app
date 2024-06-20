@@ -1,20 +1,11 @@
 
 import { useState } from 'react';
-// import authStore from '../stores/auth/authStore';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 
-// interface LoginProps {
-//   setLoginCheck: Dispatch<SetStateAction<boolean>>;
-//   loginCheck: boolean;
-// }
-
-function Login(
-  //   setLoginCheck, loginCheck }: LoginProps
-  ) {
+function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  // const [loginCheck, setLoginCheck] = useState(false)
 
   const { login, logout, setLoginStatus, loginStatus } = useAuthStore();
 
@@ -32,10 +23,8 @@ function Login(
 
       if (localStorage.getItem('token') !== null) {
         // console.log('Token from AuthStore:', authStore.token);
-        // setLoginCheck(true)
         setLoginStatus(true)
         console.log(`Can login Again? ${loginStatus}`);
-        // console.log(`Can login Again? ${loginCheck}`);
       }
 
     } catch (error) {
@@ -50,10 +39,8 @@ function Login(
 
     if (localStorage.getItem('token') === null) {
       console.log('Token after logout:', localStorage.getItem('token'));
-      // setLoginCheck(false);
       setLoginStatus(false);
       console.log(`Can login Again? ${loginStatus}`);
-      // console.log(`Can login Again? ${loginCheck}`);
     }
 
     console.log('Logout successful');

@@ -4,13 +4,7 @@ import { useBookStore } from '../stores/book/bookStore';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css';
 
-// interface LoginCheckProps {
-//   loginCheck: boolean;
-// }
-
-function EditBook(
-  // { loginCheck }: LoginCheckProps
-) {
+function EditBook() {
   const { bookID } = useParams<{ bookID?: string }>();
   const { singleBook, fetchSingleBook, updateBook } = useBookStore();
   const { loginStatus } = useAuthStore();
@@ -44,13 +38,13 @@ function EditBook(
         await updateBook(bookID, { title, author, ISBN });
         console.log('Book updated successfully');
 
-        // Naviga alla pagina del singolo libro dopo l'aggiornamento
+        // TODO Naviga alla pagina del singolo libro dopo la modifica
       } else {
         throw new Error('bookID non definito');
       }
     } catch (error) {
       console.error('Failed to update book:', error);
-      // Gestisci gli errori di validazione qui, se necessario
+      // Gestire gli errori di validazione qui
       setValidationError('Errore durante l\'aggiornamento del libro.');
     }
   };

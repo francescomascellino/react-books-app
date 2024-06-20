@@ -6,26 +6,16 @@ import { Link, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css'
 
-// interface LoginCheckProps {
-//   loginCheck: boolean;
-// }
-
-function Book(
-  // { loginCheck }: LoginCheckProps
-) {
+function Book() {
   const { books, fetchBooks, setBooks } = useBookStore();
   const { loginStatus } = useAuthStore();
 
   useEffect(() => {
 
     // Se l'utente è loggato effettua la chiamata API
-    if (
-      // loginCheck
-      loginStatus
-    ) {
+    if (loginStatus) {
       fetchBooks();
     }
-
     // Se l'utente non è loggato svuota la lista dei libri
     else {
       console.log("User must be logged in");
@@ -39,8 +29,7 @@ function Book(
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      // loginCheck, 
-      loginStatus, 
+      loginStatus,
       // books MUST FIX LOOP
     ]);
 

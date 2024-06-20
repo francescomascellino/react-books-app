@@ -3,13 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useBookStore } from '../stores/book/bookStore';
 import { useAuthStore } from "../stores/auth/useAuthStore";
 
-// interface LoginCheckProps {
-//   loginCheck: boolean;
-// }
-
-function SingleBook(
-  // { loginCheck }: LoginCheckProps
-) {
+function SingleBook() {
   const { bookID } = useParams();
   const { fetchSingleBook, singleBook } = useBookStore();
   const { loginStatus } = useAuthStore();
