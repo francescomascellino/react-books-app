@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useBookStore } from '../stores/book/bookStore';
 import { useAuthStore } from "../stores/auth/useAuthStore";
 
@@ -7,9 +7,7 @@ function SingleBook() {
   const { bookID } = useParams();
   const { fetchSingleBook, singleBook } = useBookStore();
   const { loginStatus } = useAuthStore();
-
-  console.log(bookID);
-
+  const location = useLocation();
 
   useEffect(() => {
     if (bookID) {
@@ -31,6 +29,13 @@ function SingleBook() {
 
         {loginStatus ? (
           <>
+            {/* Messaggio di stato */}
+            {location.state?.message &&
+              <div className="card">
+                {location.state?.message && <p style={{ color: 'green' }}>{location.state.message}</p>}
+              </div>
+            }
+
             <div className="card">
               <h2>{singleBook.title}</h2>
               <p>Autore: {singleBook.author}</p>

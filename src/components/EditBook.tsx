@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useBookStore } from '../stores/book/bookStore';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css';
@@ -12,6 +12,7 @@ function EditBook() {
   const [author, setAuthor] = useState('');
   const [ISBN, setISBN] = useState('');
   const [validationError, setValidationError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (bookID) {
@@ -37,15 +38,16 @@ function EditBook() {
       if (bookID) {
         await updateBook(bookID, { title, author, ISBN });
         console.log('Book updated successfully');
+        // navigate(`/books/${bookID}`); // Usa Navigator di Router-Dom per tornare alla scheda del libro editato
 
-        // TODO Naviga alla pagina del singolo libro dopo la modifica
+        navigate(`/books/${bookID}`, { state: { message: 'Libro aggiornato con successo' } }); // Naviga alla pagina del singolo libro con un messaggio di successo
       } else {
-        throw new Error('bookID non definito');
+        throw new Error('Libro non trovato');
       }
     } catch (error) {
       console.error('Failed to update book:', error);
       // Gestire gli errori di validazione qui
-      setValidationError('Errore durante l\'aggiornamento del libro.');
+      setValidationError(`Errore durante l'aggiornamento del libro: ${error}`);
     }
   };
 
