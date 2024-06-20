@@ -1,3 +1,4 @@
+// IGNORE
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "../App";
 import { AuthProvider } from "../stores/auth/AuthProvider";
