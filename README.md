@@ -619,3 +619,35 @@ function Book() {
 
 export default Book
 ```
+
+## Validation
+
+Importiamo AxiosError
+```ts
+import axios, { AxiosError } from 'axios';
+```
+
+Modifichiamo il metodo
+```ts
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      // Logica
+    } catch (error) {
+      console.error('Failed to update book:', error);
+
+      // Verifica se l'errore è un oggetto AxiosError e contiene dettagli di validazione
+      if (axios.isAxiosError(error)) {
+        // Converte 'error' nel tipo AxiosError con un oggetto di risposta che contiene un array di stringhe nella proprietà 'message'.
+        const axiosError = error as AxiosError<{ message: string[] }>;
+        if (axiosError.response?.data && axiosError.response.data.message) {
+          const validationError = axiosError.response.data.message;
+          setValidationError(`Errore durante l'aggiornamento del libro: ${validationError}`);
+        }
+      } else {
+        setValidationError(`Errore durante l'aggiornamento del libro: ${error}`);
+      }
+    }
+  };
+```

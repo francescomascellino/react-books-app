@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useBookStore } from '../stores/book/bookStore';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css';
+import axios, { AxiosError } from 'axios';
 
 function EditBook() {
   const { bookID } = useParams<{ bookID?: string }>();
@@ -45,8 +46,18 @@ function EditBook() {
       }
     } catch (error) {
       console.error('Failed to update book:', error);
-      // Gestire gli errori di validazione qui
-      setValidationError(`Errore durante l'aggiornamento del libro: ${error}`);
+
+      // Verifica se l'errore è un oggetto AxiosError e contiene dettagli di validazione
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message: string[] }>;
+        if (axiosError.response?.data && axiosError.response.data.message) {
+          const validationError = axiosError.response.data.message;
+          console.log(validationError);
+          setValidationError(`Errore durante l'aggiornamento del libro: ${validationError}`);
+        }
+      } else {
+        setValidationError(`Errore durante l'aggiornamento del libro: ${error}`);
+      }
     }
   };
 
@@ -66,7 +77,7 @@ function EditBook() {
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  minLength={2}
+                  // minLength={2}
                   required
                 />
               </div>
@@ -77,7 +88,7 @@ function EditBook() {
                   id="author"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
-                  minLength={3}
+                  // minLength={3}
                   required
                 />
               </div>
