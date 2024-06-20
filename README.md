@@ -36,6 +36,169 @@ npm install axios
 npm install react-router-dom
 ```
 
+## Creazione di un Context Provider (con mobx)
+
+### 1 Creare lo Store
+
+***authStore.tsx***
+```ts
+import { action, makeObservable, observable } from "mobx";
+import axios from 'axios';
+
+class AuthStore {
+  token: string | null = localStorage.getItem('token') || null;
+  userName: string | null = localStorage.getItem('userName') || null;
+  error: string | null = null;
+  loginStatus: boolean = false;
+
+  constructor() {
+    makeObservable(
+      this,
+      {
+        token: observable,
+        userName: observable,
+        login: action.bound,
+        logout: action.bound,
+        loginStatus: observable,
+        setLoginStatus: action.bound
+      }
+    );
+  }
+
+  // AZIONI
+
+  setLoginStatus(value: boolean) {
+    this.loginStatus = value;
+    return this.loginStatus
+  }
+
+  async login(username: string, password: string) {
+    try {
+      const response = await axios.post('http://localhost:3000/auth/login', { username, password });
+
+      console.log(`Username: ${username}, Password: ${password}`);
+
+      const token = response.data.access_token;
+      this.token = token;
+      localStorage.setItem('token', token);
+
+      this.userName = username;
+      localStorage.setItem('userName', this.userName);
+
+      this.error = null;
+
+      console.log('Token from store:', this.token);
+      console.log('Username from store:', this.userName);
+      return Promise.resolve(this.token);
+    } catch (error) {
+      localStorage.removeItem('userName');
+      this.userName = null;
+      localStorage.removeItem('token');
+      this.token = null;
+      this.error = 'Invalid username or password!';
+      console.error('Login failed:', error);
+      // throw error;
+      return Promise.reject(error);
+    }
+  }
+
+  logout() {
+    this.error = null;
+    this.token = null;
+    localStorage.removeItem('token');
+    this.userName = null;
+    localStorage.removeItem('userName');
+  }
+
+}
+
+const authStore = new AuthStore();
+export default authStore;
+```
+### Creiamo il contesto
+
+***AuthContext.tsx***
+```ts
+import { createContext } from "react";
+import authStore from "./authStore";
+
+// Definiamo un tipo TypeScript per il contesto dell'autenticazione.
+// Questo tipo specifica che il contesto conterrà authStore del tipo authStore.
+type AuthContextType = {
+  authStore: typeof authStore;
+};
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export default AuthContext;
+```
+
+### Creiamo il Provider incui useremoil Contesto creato
+
+***AuthProvider.tsx***
+```ts
+import React, { ReactNode } from "react";
+import AuthContext from "./AuthContext";
+import authStore from "./authStore";
+
+// Definiamo ed esportiamo un componente funzionale AuthProvider.
+// Questo componente accetta un prop "children" che rappresenta i componenti figli che saranno racchiusi dal provider.
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  return (
+    <AuthContext.Provider value={{ authStore }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+```
+
+### Utilizzo del Contesto tramite custom hook
+
+***useAuthStore.tsx***
+```ts
+import { useContext } from "react";
+import AuthContext from "./AuthContext";
+
+// Definiamo ed esportiamo un hook personalizzato chiamato useAuthStore.
+// Questo hook utilizza useContext per accedere al contesto dell'autenticazione.
+export const useAuthStore = () => {
+  // Otteniamo il contesto dell'autenticazione.
+  const context = useContext(AuthContext);
+
+   // Se il contesto non è definito, l'hook è stato chiamato al di fuori di un AuthProvider. In questo caso, lanciamo un errore.
+  if (!context) {
+    throw new Error("useAuthStore must be used within an AuthProvider");
+  }
+
+  // Se il contesto è definito, ritorniamo authStore dal contesto.
+  return context.authStore;
+};
+```
+
+### Utilizzo del custom hook useAuthStore
+
+```ts
+// Importiamo l'hook
+import { useAuthStore } from '../stores/auth/useAuthStore';
+
+function Component() {
+
+// Utilizziamo l'hook per estrarre metodi e variabili dallo store legato al Context Provider
+  const { login, logout, setLoginStatus, loginStatus } = useAuthStore();
+
+  // Metodi e logica del componente
+
+  return (
+    <>
+      // Markup
+    </>
+
+  );
+}
+
+export default Component;
+```
+
 ## Uso di js-cookie
 
 ```bash
