@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react'
 import Navbar from './Navbar';
 import { useBookStore } from '../stores/book/bookStore';
@@ -33,6 +32,8 @@ function Book() {
     ]);
 
   const handlePageChange = (newPage: number) => {
+    // fetchBooks accetta i seguenti parametri: const fetchBooks = async (page: number = 1, pageSize: number = 10)
+    // Chiama fetchBooks con il nuovo numero di pagina, lasciando pageSize al suo default di 10
     fetchBooks(newPage);
   };
 
@@ -66,7 +67,13 @@ function Book() {
                 >
                   Previous
                 </button>
+                {/* Array.from crea un array di lunghezza pagination.totalPages. */}
+                {/* { length: pagination.totalPages } specifica la lunghezza dell'array, che è il numero totale di pagine disponibili. */}
+                {/* _ è usato come convenzione per indicare un parametro che non verrà utilizzato nella mapFn di Array.from() */}
+                {/* i: è il secondo parametro della funzione di mappatura. Rappresenta l'indice dell'elemento corrente nell'array generato da Array.from */}
+                {/* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from */}
                 {Array.from({ length: pagination.totalPages }, (_, i) => (
+                  // Crea un button per ogni indice dell'array
                   <button
                     key={i + 1}
                     onClick={() => handlePageChange(i + 1)}

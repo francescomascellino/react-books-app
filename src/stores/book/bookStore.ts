@@ -37,7 +37,7 @@ export const useBookStore = () => {
       if (!token) {
         throw new Error('Token not found in localStorage');
       }
-
+      // Ci aspettiamouna response di tipo PaginatedBooks (descritta nell'interfaccia)
       const response = await axios.get<PaginatedBooks>(`http://localhost:3000/book?page=${page}&pageSize=${pageSize}`, {
         headers: {
           Authorization: `Bearer ${token}`,

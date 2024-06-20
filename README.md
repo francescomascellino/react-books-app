@@ -459,3 +459,163 @@ class AuthStore {
 const authStore = new AuthStore();
 export default authStore;
 ```
+
+## Paginazione
+
+Nello store creiamo una interfaccia rappresentante la response contenente la paginazone:
+
+```ts
+import { useState } from 'react';
+import axios from 'axios';
+
+interface Book {
+  // Codicw
+}
+
+interface PaginatedBooks {
+  docs: Book[];
+  totalDocs: number;
+  limit: number;
+  page: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  nextPage: number | null;
+  prevPage: number | null;
+}
+
+export const useBookStore = () => {
+
+  // Creiamo uno State per gestire la paginazione di tipo PaginatedBooks
+  const [pagination, setPagination] = useState<PaginatedBooks | undefined>(undefined);
+
+  // Inseriamo i parametri necessari alla query
+  const fetchBooks = async (page: number = 1, pageSize: number = 10) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      // Ci aspettiamouna response di tipo PaginatedBooks (descritta nell'interfaccia)
+      const response = await axios.get<PaginatedBooks>(`http://localhost:3000/book?page=${page}&pageSize=${pageSize}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log('Books:', response.data);
+      setBooks(response.data.docs);
+
+      // Settiamo il valore di pagination
+      setPagination(response.data);
+    } catch (error) {
+      console.error('Failed to fetch books:', error);
+    }
+  };
+
+  const fetchSingleBook = async (bookId: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      const response = await axios.get<Book>(`http://localhost:3000/book/${bookId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setSingleBook(response.data);
+      console.log('singleBook:', singleBook);
+    } catch (error) {
+      console.error(`Failed to fetch book with ID ${bookId}:`, error);
+    }
+  };
+
+  // Altra logica
+
+  return {
+    books,
+    singleBook,
+    pagination, // Esportiamo la paginazione
+    setBooks,
+    fetchBooks,
+    fetchSingleBook,
+    updateBook,
+  };
+};
+```
+
+Nel componente:
+
+```ts
+// Altri import
+import { useBookStore } from '../stores/book/bookStore';
+
+function Book() {
+  // Importiamo pagination
+  const { books, fetchBooks, setBooks, pagination } = useBookStore();
+  
+  // Altra logica
+
+  // Gestiamo il cambio di pagina al click dei pulsanti di Paginazione
+  const handlePageChange = (newPage: number) => {
+    // fetchBooks accetta i seguenti parametri: const fetchBooks = async (page: number = 1, pageSize: number = 10)
+    // Chiama fetchBooks con il nuovo numero di pagina, lasciando pageSize al suo default di 10
+    fetchBooks(newPage);
+  };
+
+  return (
+    <>
+
+      // Markup...
+
+      <div>
+        {/* Paginazione */}
+        {pagination && (
+          <div className="pagination">
+            <button
+              onClick={() => handlePageChange(pagination.prevPage!)}
+              // Se non è presente una Prev Page è disabilitato
+              disabled={!pagination.hasPrevPage}
+            >
+              Previous
+            </button>
+
+            {/* Array.from crea un array di lunghezza pagination.totalPages. */}
+            {/* { length: pagination.totalPages } specifica la lunghezza dell'array, che è il numero totale di pagine disponibili. */}
+            {/* _ è usato come convenzione per indicare un parametro che non verrà utilizzato nella mapFn di Array.from() */}
+            {/* i: è il secondo parametro della funzione di mappatura. Rappresenta l'indice dell'elemento corrente nell'array generato da Array.from */}
+            {/* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from */}
+            {Array.from({ length: pagination.totalPages }, (_, i) => (
+              // Crea un button per ogni indice dell'array
+              <button
+                key={i + 1}
+                onClick={() => handlePageChange(i + 1)}
+                disabled={pagination.page === i + 1}
+              >
+                {i + 1}
+              </button>
+            ))}
+                
+            <button
+              onClick={() => handlePageChange(pagination.nextPage!)}
+              // Se non è presente una Next Page è disabilitato
+              disabled={!pagination.hasNextPage}
+            >
+              Next
+            </button>
+
+          </div>
+        )}
+      </div>
+
+      // Markup...
+    </>
+  )
+}
+
+export default Book
+```
