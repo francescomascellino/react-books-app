@@ -7,7 +7,7 @@ import axios, { AxiosError } from 'axios';
 
 function EditBook() {
   const { bookID } = useParams<{ bookID?: string }>();
-  const { singleBook, fetchSingleBook, updateBook } = useBookStore();
+  const { singleBook, fetchBooks, fetchSingleBook, updateBook } = useBookStore();
   const { loginStatus } = useAuthStore();
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -39,6 +39,7 @@ function EditBook() {
       if (bookID) {
         await updateBook(bookID, { title, author, ISBN });
         console.log('Book updated successfully');
+        fetchBooks()
         // Naviga alla pagina del singolo libro con un messaggio di successo
         navigate(`/books/${bookID}`, { state: { message: 'Libro aggiornato con successo' } });
       } else {
@@ -118,8 +119,6 @@ function EditBook() {
         ) : (
           <h2>Effettua il Login per accedere al form di modifica del libro</h2>
         )}
-
-
 
       </div>
     </>

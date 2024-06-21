@@ -10,26 +10,20 @@ function Book() {
   const { loginStatus } = useAuthStore();
 
   useEffect(() => {
-
     // Se l'utente è loggato effettua la chiamata API
     if (loginStatus) {
       fetchBooks();
-    }
-    // Se l'utente non è loggato svuota la lista dei libri
-    else {
+    } else {
+      // Se l'utente non è loggato svuota la lista dei libri
       console.log("User must be logged in");
-      setBooks([])
+      setBooks([]);
     }
 
   },
     // [] MEANS THE EFFECT WILL RUN ONCE AND NEVER AGAIN.
-    // [count] MEANS THE EFFECT WILL RUN EVERY TIME count CHANGES.
-    // WRITE NOTHING (EVENT THE BRACLETS) IF YOU WANT THAT THE EFFECT WILL RUN EVERY TIME THERE IS A CHANGE
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      loginStatus,
-      // books MUST FIX LOOP
-    ]);
+    // [loginStatus] MEANS THE EFFECT WILL RUN EVERY TIME loginStatus CHANGES.
+    // WRITE NOTHING (EVEN THE BRACLETS) IF YOU WANT THAT THE EFFECT WILL RUN EVERY TIME THERE IS A CHANGE
+    [loginStatus, fetchBooks, setBooks]);
 
   const handlePageChange = (newPage: number) => {
     // fetchBooks accetta i seguenti parametri: const fetchBooks = async (page: number = 1, pageSize: number = 10)

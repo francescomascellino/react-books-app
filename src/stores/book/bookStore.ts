@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import axios from 'axios';
 
 interface Book {
@@ -31,7 +31,8 @@ export const useBookStore = () => {
   const [singleBook, setSingleBook] = useState<Book | undefined>(undefined);
   const [pagination, setPagination] = useState<PaginatedBooks | undefined>(undefined);
 
-  const fetchBooks = async (page: number = 1, pageSize: number = 10) => {
+  // usiamo useCallback per far si che la chiamata API venga ripetuta una sola volta
+  const fetchBooks = useCallback(async (page: number = 1, pageSize: number = 10) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -50,7 +51,9 @@ export const useBookStore = () => {
     } catch (error) {
       console.error('Failed to fetch books:', error);
     }
-  };
+  },
+    // [] = La logica viene eseguita una sola volta
+    []);
 
   const fetchSingleBook = async (bookId: string) => {
     try {
@@ -87,11 +90,10 @@ export const useBookStore = () => {
 
       console.log('Updated Book:', response.data);
       // Aggiorna il libro nel singleBook o nella lista books, a seconda dell'implementazione
-      // Esempio:
-      setSingleBook(response.data); // Aggiorna il singleBook con i nuovi dati
-      // Oppure:
+
       const updatedBooks = books.map(book => (book._id === bookId ? response.data : book));
       setBooks(updatedBooks); // Aggiorna la lista dei libri
+      setSingleBook(response.data); // Aggiorna il singleBook con i nuovi dati
     } catch (error) {
       console.error(`Failed to update book with ID ${bookId}:`, error);
       throw error; // Rilancia l'errore per gestione futura
