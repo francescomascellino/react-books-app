@@ -15,8 +15,8 @@ function SingleBook() {
       console.log(`Book with ID ${bookID}`, singleBook);
 
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bookID]);
+
+  }, [bookID, fetchSingleBook, singleBook]);
 
   if (!singleBook) {
     return <div>Loading...</div>;

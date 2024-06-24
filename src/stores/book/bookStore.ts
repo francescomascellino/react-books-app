@@ -32,7 +32,8 @@ export const useBookStore = () => {
   const [pagination, setPagination] = useState<PaginatedBooks | undefined>(undefined);
 
   // usiamo useCallback per far si che la chiamata API venga ripetuta una sola volta
-  const fetchBooks = useCallback(async (page: number = 1, pageSize: number = 10) => {
+  const fetchBooks = useCallback(
+    async (page: number = 1, pageSize: number = 10) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -52,28 +53,34 @@ export const useBookStore = () => {
       console.error('Failed to fetch books:', error);
     }
   },
+
     // [] = La logica viene eseguita una sola volta
     []);
 
-  const fetchSingleBook = async (bookId: string) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Token not found in localStorage');
-      }
+    const fetchSingleBook = useCallback(
+      async (bookId: string) => {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            throw new Error('Token not found in localStorage');
+          }
+    
+          const response = await axios.get<Book>(`http://localhost:3000/book/${bookId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+    
+          setSingleBook(response.data);
+        } catch (error) {
+          console.error(`Failed to fetch book with ID ${bookId}:`, error);
+        }
+      },
 
-      const response = await axios.get<Book>(`http://localhost:3000/book/${bookId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // [] = La logica viene eseguita una sola volta
+      []);
 
-      setSingleBook(response.data);
-      console.log('singleBook:', singleBook);
-    } catch (error) {
-      console.error(`Failed to fetch book with ID ${bookId}:`, error);
-    }
-  };
+  
 
   const updateBook = async (bookId: string, updatedBook: Partial<Book>) => {
     try {
