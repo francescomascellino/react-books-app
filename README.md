@@ -115,6 +115,7 @@ class AuthStore {
 const authStore = new AuthStore();
 export default authStore;
 ```
+
 ### Creiamo il contesto
 
 ***AuthContext.tsx***
@@ -221,6 +222,112 @@ function Component() {
 }
 
 export default Component;
+```
+
+Se il componente necessita di essere ri-renderizzato, wrappiamolo nell'observer() di MobX.
+observer() è un'utility fornita da MobX che rende i componenti React reattivi ai cambiamenti degli stati osservabili. Quando un componente è wrappato con observer, esso si re-renderizza automaticamente ogni volta che uno degli stati osservabili utilizzati all'interno del componente cambia.
+
+```ts
+// Altri import
+import { observer } from 'mobx-react-lite';
+
+// Wrappiamo il componente cob observer()
+const Book = observer(() => {
+
+  // Logica
+
+  return (
+    <>
+      // Markup
+    </>
+  )
+});
+
+export default Book
+```
+
+runInAction è una funzione di MobX utilizzata nello store per raggruppare una serie di modifiche di stato in una singola azione. Questo è utile per garantire che tutte le modifiche vengano applicate insieme e che i componenti osservabili vengano ri-renderizzati solo una volta alla fine dell'azione, piuttosto che per ogni singola modifica.
+
+```ts
+import axios from 'axios';
+import { action, makeObservable, observable, runInAction } from 'mobx';
+
+interface Book {
+  _id: string;
+  title: string;
+  ISBN: string;
+  author: string;
+  is_deleted?: boolean; // Campo opzionale
+  loaned_to?: {
+    _id: string;
+    name: string;
+  } | null; // Campo opzionale
+}
+
+interface PaginatedBooks {
+  docs: Book[];
+  totalDocs: number;
+  limit: number;
+  page: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  nextPage: number | null;
+  prevPage: number | null;
+}
+
+class BookStore {
+  books: Book[] = [];
+  singleBook: Book | null = null;
+  pagination: PaginatedBooks | null = null;
+
+  constructor() {
+    makeObservable(this, {
+      books: observable,
+      singleBook: observable,
+      setBooks: action,
+      fetchBooks: action,
+      fetchSingleBook: action,
+      updateBook: action,
+    });
+  }
+
+  setBooks(books: Book[] | []) {
+    this.books = books;
+  }
+
+  fetchBooks = async (page: number = 1, pageSize: number = 10) => {
+    try {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      const response = await axios.get<PaginatedBooks>(`http://localhost:3000/book?page=${page}&pageSize=${pageSize}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // runInAction
+      runInAction(() => {
+        this.books = response.data.docs;
+        this.pagination = response.data;
+      });
+      console.log('this nbooks:', this.books);
+
+    } catch (error) {
+      console.error('Failed to fetch books:', error);
+    }
+  };
+
+  // Altra logica
+
+}
+
+const bookStore = new BookStore();
+export default bookStore;
 ```
 
 ## React Router Dom

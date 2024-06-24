@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
 import Navbar from './Navbar';
-import { useBookStore } from '../stores/book/bookStore';
+import { useBookStore } from '../stores/book/useBookStore';
 import { Link, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css'
+import { observer } from 'mobx-react-lite';
 
-function Book() {
+// Wrappiamo il componente cob observer()
+const Book = observer(() => {
   const { books, fetchBooks, setBooks, pagination } = useBookStore();
   const { loginStatus } = useAuthStore();
 
@@ -16,7 +18,6 @@ function Book() {
     } else {
       // Se l'utente non è loggato svuota la lista dei libri
       console.log("User must be logged in");
-      setBooks([]);
     }
 
   },
@@ -28,6 +29,8 @@ function Book() {
   const handlePageChange = (newPage: number) => {
     // fetchBooks accetta i seguenti parametri: const fetchBooks = async (page: number = 1, pageSize: number = 10)
     // Chiama fetchBooks con il nuovo numero di pagina, lasciando pageSize al suo default di 10
+    console.log(newPage);
+    
     fetchBooks(newPage);
   };
 
@@ -53,7 +56,7 @@ function Book() {
           </div>
           <div>
             {/* Paginazione */}
-            {pagination && (
+            {pagination && loginStatus && (
               <div className="pagination">
                 <button
                   onClick={() => handlePageChange(pagination.prevPage!)}
@@ -73,7 +76,7 @@ function Book() {
                     onClick={() => handlePageChange(i + 1)}
                     disabled={pagination.page === i + 1}
                   >
-                    {i + 1}
+                    {i + 1} 
                   </button>
                 ))}
                 <button
@@ -109,6 +112,6 @@ function Book() {
       </div>
     </>
   )
-}
+});
 
 export default Book

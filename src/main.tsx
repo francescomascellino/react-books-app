@@ -8,6 +8,7 @@ import Book from './components/Book.tsx';
 import EditBook from './components/EditBook.tsx';
 import SingleBook from './components/SingleBook.tsx';
 import './assets/css/index.css';
+import { BookProvider } from './stores/book/BookProvider.tsx';
 
 const router = createBrowserRouter([
   {
@@ -16,15 +17,28 @@ const router = createBrowserRouter([
   },
   {
     path: "/books",
-    element: <Book />,
+    element: (
+      // Avvolgiamo le rotte nel contesto
+      <BookProvider>
+        <Book />
+      </BookProvider>
+    ),
     children: [
       {
         path: ":bookID",
-        element: <SingleBook />
+        element: (
+          <BookProvider>
+            <SingleBook />
+          </BookProvider>
+        ),
       },
       {
         path: ":bookID/edit",
-        element: <EditBook />
+        element: (
+          <BookProvider>
+            <EditBook />
+          </BookProvider>
+        ),
       }
     ],
   },

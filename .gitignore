@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 src/components/oldBookComponent.tsx
 src/components/Root.tsx
+src/components/Book copy.tsx
+src/components/EditBook copy.tsx
+src/stores/book/bookStore copy.ts
+src/components/SingleBook copy.tsx

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useBookStore } from '../stores/book/bookStore';
+import { useBookStore } from '../stores/book/useBookStore';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css';
 import axios, { AxiosError } from 'axios';
+import { observer } from 'mobx-react-lite';
 
-function EditBook() {
+const EditBook = observer(() => {
   const { bookID } = useParams<{ bookID?: string }>();
   const { singleBook, fetchBooks, fetchSingleBook, updateBook } = useBookStore();
   const { loginStatus } = useAuthStore();
@@ -123,7 +124,7 @@ function EditBook() {
       </div>
     </>
 
-  );
-}
+  )
+});
 
 export default EditBook;

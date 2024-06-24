@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react';
+// import { useCallback, useState } from 'react';
 import axios from 'axios';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 
 interface Book {
   _id: string;
@@ -25,93 +26,105 @@ interface PaginatedBooks {
   prevPage: number | null;
 }
 
-export const useBookStore = () => {
-  // Dichiarazione esplicita del tipo Book
-  const [books, setBooks] = useState<Book[]>([]);
-  const [singleBook, setSingleBook] = useState<Book | undefined>(undefined);
-  const [pagination, setPagination] = useState<PaginatedBooks | undefined>(undefined);
+class BookStore {
+  books: Book[] = [];
+  singleBook: Book | null = null;
+  pagination: PaginatedBooks | null = null;
 
-  // usiamo useCallback per far si che la chiamata API venga ripetuta una sola volta
-  const fetchBooks = useCallback(
-    async (page: number = 1, pageSize: number = 10) => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('Token not found in localStorage');
-        }
-        // Ci aspettiamouna response di tipo PaginatedBooks (descritta nell'interfaccia)
-        const response = await axios.get<PaginatedBooks>(`http://localhost:3000/book?page=${page}&pageSize=${pageSize}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  constructor() {
+    makeObservable(this, {
+      books: observable,
+      singleBook: observable,
+      setBooks: action,
+      fetchBooks: action,
+      fetchSingleBook: action,
+      updateBook: action,
+    });
+  }
 
-        console.log('Books:', response.data);
-        setBooks(response.data.docs);
-        setPagination(response.data);
-      } catch (error) {
-        console.error('Failed to fetch books:', error);
+  setBooks(books: Book[] | []) {
+    this.books = books;
+  }
+
+  fetchBooks = async (page: number = 1, pageSize: number = 10) => {
+    try {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        throw new Error('Token not found in localStorage');
       }
-    },
 
-    // [] = La logica viene eseguita una sola volta
-    []);
+      const response = await axios.get<PaginatedBooks>(`http://localhost:3000/book?page=${page}&pageSize=${pageSize}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  const fetchSingleBook = useCallback(
-    async (bookId: string) => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('Token not found in localStorage');
-        }
+      console.log(response.data.docs);
 
-        const response = await axios.get<Book>(`http://localhost:3000/book/${bookId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
 
-        setSingleBook(response.data);
-      } catch (error) {
-        console.error(`Failed to fetch book with ID ${bookId}:`, error);
-      }
-    },
+      runInAction(() => {
+        this.books = response.data.docs;
+        this.pagination = response.data;
+      });
+      console.log('this nbooks:', this.books);
 
-    // [] = La logica viene eseguita una sola volta
-    []);
+    } catch (error) {
+      console.error('Failed to fetch books:', error);
+    }
+  };
 
-  const updateBook = async (bookId: string, updatedBook: Partial<Book>) => {
+  fetchSingleBook = async (bookID: string) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('Token not found in localStorage');
       }
 
-      const response = await axios.patch<Book>(`http://localhost:3000/book/${bookId}`, updatedBook, {
+      runInAction(() => {
+        this.singleBook = null;
+      })
+
+      const response = await axios.get<Book>(`http://localhost:3000/book/${bookID}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      console.log('Updated Book:', response.data);
-      // Aggiorna il libro nel singleBook o nella lista books, a seconda dell'implementazione
+      runInAction(() => {
+        this.singleBook = response.data;
+      });
+      console.log('Single Book', this.singleBook);
 
-      const updatedBooks = books.map(book => (book._id === bookId ? response.data : book));
-      setBooks(updatedBooks); // Aggiorna la lista dei libri
-      setSingleBook(response.data); // Aggiorna il singleBook con i nuovi dati
     } catch (error) {
-      console.error(`Failed to update book with ID ${bookId}:`, error);
-      throw error; // Rilancia l'errore per gestione futura
+      console.error('Failed to fetch single book:', error);
     }
-  }
-
-  return {
-    books,
-    singleBook,
-    pagination,
-    setBooks,
-    fetchBooks,
-    fetchSingleBook,
-    updateBook,
   };
-};
+
+  updateBook = async (bookID: string, updatedBook: Partial<Book>) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      const response = await axios.patch<Book>(`http://localhost:3000/book/${bookID}`, updatedBook, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      runInAction(() => {
+        const index = this.books.findIndex(book => book._id === bookID);
+        if (index > -1) {
+          this.books[index] = response.data;
+        }
+      });
+    } catch (error) {
+      console.error('Failed to update book:', error);
+    }
+  };
+}
+
+const bookStore = new BookStore();
+export default bookStore;

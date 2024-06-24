@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useBookStore } from '../stores/book/bookStore';
+import { useBookStore } from '../stores/book/useBookStore';
 import { useAuthStore } from "../stores/auth/useAuthStore";
+import { observer } from "mobx-react-lite";
 
-function SingleBook() {
+const SingleBook = observer(() => {
   const { bookID } = useParams();
   const { fetchSingleBook, singleBook } = useBookStore();
   const { loginStatus } = useAuthStore();
@@ -11,15 +12,13 @@ function SingleBook() {
 
   useEffect(() => {
     if (bookID) {
+      console.log(`BookID Changed ${bookID}`);
+
       fetchSingleBook(bookID);
     }
   },
 
     [bookID, fetchSingleBook]);
-
-  if (!singleBook) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <>
@@ -36,10 +35,16 @@ function SingleBook() {
             }
 
             <div className="card">
-              <h2>{singleBook.title}</h2>
-              <p>Autore: {singleBook.author}</p>
-              <p>ISBN: {singleBook.ISBN}</p>
-              {singleBook.loaned_to && <p>Affittato a {singleBook.loaned_to.name}</p>}
+              {singleBook ? (
+                <>
+                  <h2>{singleBook.title}</h2>
+                  <p>Autore: {singleBook.author}</p>
+                  <p>ISBN: {singleBook.ISBN}</p>
+                  {singleBook.loaned_to && <p>Affittato a {singleBook.loaned_to.name}</p>}
+                </>
+              ) : (
+                <p>Loading...</p>
+              )}
             </div>
             <Link to={`/books/${bookID}/edit`}><button>Modifica</button></Link>
           </>
@@ -49,7 +54,7 @@ function SingleBook() {
       </div>
     </>
 
-  );
-}
+  )
+});
 
 export default SingleBook;
