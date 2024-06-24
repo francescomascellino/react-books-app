@@ -22,7 +22,6 @@ function Login() {
       setError(''); // Svuota il error
 
       if (localStorage.getItem('token') !== null) {
-        // console.log('Token from AuthStore:', authStore.token);
         setLoginStatus(true)
         console.log(`Can login Again? ${loginStatus}`);
       }

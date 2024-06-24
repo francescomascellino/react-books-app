@@ -35,6 +35,7 @@ class BookStore {
     makeObservable(this, {
       books: observable,
       singleBook: observable,
+      pagination: observable,
       setBooks: action,
       fetchBooks: action,
       fetchSingleBook: action,
@@ -42,8 +43,12 @@ class BookStore {
     });
   }
 
-  setBooks(books: Book[] | []) {
-    this.books = books;
+  // CONTROLLARE PER RIMOZIONE SE INUTILE
+  async setBooks(newBooks: Book[]) {
+    runInAction(() => {
+      this.books = newBooks;
+    });
+    console.log('Books Set:', this.books);
   }
 
   fetchBooks = async (page: number = 1, pageSize: number = 10) => {
@@ -60,15 +65,10 @@ class BookStore {
         },
       });
 
-      console.log(response.data.docs);
-
-
       runInAction(() => {
         this.books = response.data.docs;
         this.pagination = response.data;
       });
-      console.log('this nbooks:', this.books);
-
     } catch (error) {
       console.error('Failed to fetch books:', error);
     }

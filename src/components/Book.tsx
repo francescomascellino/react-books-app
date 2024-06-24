@@ -17,6 +17,7 @@ const Book = observer(() => {
       fetchBooks();
     } else {
       // Se l'utente non è loggato svuota la lista dei libri
+      // setBooks([]);
       console.log("User must be logged in");
     }
 
@@ -29,8 +30,6 @@ const Book = observer(() => {
   const handlePageChange = (newPage: number) => {
     // fetchBooks accetta i seguenti parametri: const fetchBooks = async (page: number = 1, pageSize: number = 10)
     // Chiama fetchBooks con il nuovo numero di pagina, lasciando pageSize al suo default di 10
-    console.log(newPage);
-    
     fetchBooks(newPage);
   };
 
@@ -41,7 +40,7 @@ const Book = observer(() => {
       <div className="book-container">
         <div className="book-list">
           <div className='book-list-wrapper'>
-            {loginStatus ? (
+            {loginStatus && books.length > 0 ? (
               <>
                 <h2>Lista dei titoli dei libri:</h2>
                 {books.map((book) => (
@@ -76,7 +75,7 @@ const Book = observer(() => {
                     onClick={() => handlePageChange(i + 1)}
                     disabled={pagination.page === i + 1}
                   >
-                    {i + 1} 
+                    {i + 1}
                   </button>
                 ))}
                 <button
