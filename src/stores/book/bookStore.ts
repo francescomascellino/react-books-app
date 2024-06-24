@@ -34,53 +34,51 @@ export const useBookStore = () => {
   // usiamo useCallback per far si che la chiamata API venga ripetuta una sola volta
   const fetchBooks = useCallback(
     async (page: number = 1, pageSize: number = 10) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Token not found in localStorage');
-      }
-      // Ci aspettiamouna response di tipo PaginatedBooks (descritta nell'interfaccia)
-      const response = await axios.get<PaginatedBooks>(`http://localhost:3000/book?page=${page}&pageSize=${pageSize}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Token not found in localStorage');
+        }
+        // Ci aspettiamouna response di tipo PaginatedBooks (descritta nell'interfaccia)
+        const response = await axios.get<PaginatedBooks>(`http://localhost:3000/book?page=${page}&pageSize=${pageSize}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      console.log('Books:', response.data);
-      setBooks(response.data.docs);
-      setPagination(response.data);
-    } catch (error) {
-      console.error('Failed to fetch books:', error);
-    }
-  },
+        console.log('Books:', response.data);
+        setBooks(response.data.docs);
+        setPagination(response.data);
+      } catch (error) {
+        console.error('Failed to fetch books:', error);
+      }
+    },
 
     // [] = La logica viene eseguita una sola volta
     []);
 
-    const fetchSingleBook = useCallback(
-      async (bookId: string) => {
-        try {
-          const token = localStorage.getItem('token');
-          if (!token) {
-            throw new Error('Token not found in localStorage');
-          }
-    
-          const response = await axios.get<Book>(`http://localhost:3000/book/${bookId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-    
-          setSingleBook(response.data);
-        } catch (error) {
-          console.error(`Failed to fetch book with ID ${bookId}:`, error);
+  const fetchSingleBook = useCallback(
+    async (bookId: string) => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Token not found in localStorage');
         }
-      },
 
-      // [] = La logica viene eseguita una sola volta
-      []);
+        const response = await axios.get<Book>(`http://localhost:3000/book/${bookId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-  
+        setSingleBook(response.data);
+      } catch (error) {
+        console.error(`Failed to fetch book with ID ${bookId}:`, error);
+      }
+    },
+
+    // [] = La logica viene eseguita una sola volta
+    []);
 
   const updateBook = async (bookId: string, updatedBook: Partial<Book>) => {
     try {
