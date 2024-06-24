@@ -5,7 +5,7 @@ import { useAuthStore } from "../stores/auth/useAuthStore";
 import { observer } from "mobx-react-lite";
 
 const SingleBook = observer(() => {
-  const { bookID } = useParams();
+  const { bookID } = useParams<{ bookID?: string }>();
   const { fetchSingleBook, singleBook } = useBookStore();
   const { loginStatus } = useAuthStore();
   const location = useLocation();

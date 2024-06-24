@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 
 const EditBook = observer(() => {
   const { bookID } = useParams<{ bookID?: string }>();
-  const { singleBook, fetchBooks, fetchSingleBook, updateBook } = useBookStore();
+  const { singleBook, fetchBooks, fetchSingleBook, pagination, updateBook } = useBookStore();
   const { loginStatus } = useAuthStore();
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -40,7 +40,7 @@ const EditBook = observer(() => {
       if (bookID) {
         await updateBook(bookID, { title, author, ISBN });
         console.log('Book updated successfully');
-        fetchBooks()
+        fetchBooks(pagination?.page)
         // Naviga alla pagina del singolo libro con un messaggio di successo
         navigate(`/books/${bookID}`, { state: { message: 'Libro aggiornato con successo' } });
       } else {
