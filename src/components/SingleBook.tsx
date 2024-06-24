@@ -12,11 +12,10 @@ function SingleBook() {
   useEffect(() => {
     if (bookID) {
       fetchSingleBook(bookID);
-      console.log(`Book with ID ${bookID}`, singleBook);
-
     }
+  },
 
-  }, [bookID, fetchSingleBook, singleBook]);
+    [bookID, fetchSingleBook]);
 
   if (!singleBook) {
     return <div>Loading...</div>;
