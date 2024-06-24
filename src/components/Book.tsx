@@ -73,6 +73,7 @@ const Book = observer(() => {
                   <button
                     key={i + 1}
                     onClick={() => handlePageChange(i + 1)}
+                    className={pagination.page === i + 1 ? 'current-page-button' : ''}
                     disabled={pagination.page === i + 1}
                   >
                     {i + 1}
