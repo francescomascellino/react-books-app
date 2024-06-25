@@ -88,6 +88,9 @@ const Book = observer(() => {
               </div>
             )}
           </div>
+          <div>
+            <Link to={`/books/add`}><button>Aggiungiun nuovo libro</button></Link>
+          </div>
         </div>
 
 

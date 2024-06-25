@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useBookStore } from '../stores/book/useBookStore';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css';
 import axios, { AxiosError } from 'axios';
 import { observer } from 'mobx-react-lite';
 
-const EditBook = observer(() => {
-  const { bookID } = useParams<{ bookID?: string }>();
-  const { singleBook, fetchBooks, fetchSingleBook, pagination, updateBook } = useBookStore();
+const AddBook = observer(() => {
+  const { fetchBooks, addBook, pagination } = useBookStore();
   const { loginStatus } = useAuthStore();
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -16,36 +15,38 @@ const EditBook = observer(() => {
   const [validationError, setValidationError] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (bookID) {
-      fetchSingleBook(bookID);
-      console.log(`Book with ID ${bookID}`, singleBook);
+  // useEffect(() => {
+  //   if (bookID) {
+  //     fetchSingleBook(bookID);
+  //     console.log(`Book with ID ${bookID}`, singleBook);
 
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bookID]);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [bookID]);
 
-  useEffect(() => {
-    if (singleBook) {
-      setTitle(singleBook.title);
-      setAuthor(singleBook.author);
-      setISBN(singleBook.ISBN);
-    }
-  }, [singleBook]);
+  // useEffect(() => {
+  //   if (singleBook) {
+  //     setTitle(singleBook.title);
+  //     setAuthor(singleBook.author);
+  //     setISBN(singleBook.ISBN);
+  //   }
+  // }, [singleBook]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      if (bookID) {
-        await updateBook(bookID, { title, author, ISBN });
-        console.log('Book updated successfully');
-        fetchBooks(pagination?.page)
-        // Naviga alla pagina del singolo libro con un messaggio di successo
-        navigate(`/books/${bookID}`, { state: { message: 'Libro aggiornato con successo' } });
-      } else {
-        throw new Error('Libro non trovato');
-      }
+      const newBook = await addBook({ title, author, ISBN });
+      console.log('Book added successfully', newBook);
+      fetchBooks(pagination?.page)
+      
+      await fetchBooks(pagination?.page);
+
+      console.log('id', newBook._id);
+      
+
+      navigate(`/books/${newBook._id}`, { state: { message: 'Libro aggiunto con successo' } });
+
     } catch (error) {
       console.error('Failed to update book:', error);
 
@@ -55,10 +56,10 @@ const EditBook = observer(() => {
         if (axiosError.response?.data && axiosError.response.data.message) {
           const validationError = axiosError.response.data.message;
           console.log(validationError);
-          setValidationError(`Errore durante l'aggiornamento del libro: ${validationError}`);
+          setValidationError(`Errore durante la creazione del libro: ${validationError}`);
         }
       } else {
-        setValidationError(`Errore durante l'aggiornamento del libro: ${error}`);
+        setValidationError(`Errore durante la creazione del libro: ${error}`);
       }
     }
   };
@@ -66,11 +67,11 @@ const EditBook = observer(() => {
   return (
     <>
       <div className="edit-book">
-        <h1>EditBook.tsx</h1>
+        <h1>AddBook.tsx</h1>
 
         {loginStatus ? (
           <>
-            <h2>Modifica Libro</h2>
+            <h2>Aggiungiun nuovo Libro</h2>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="title">Titolo</label>
@@ -109,10 +110,8 @@ const EditBook = observer(() => {
                 />
               </div>
               <div>
-                <button type="submit">Conferma</button>
-                {singleBook &&
-                  <Link to={`/books/${singleBook._id}`}><button>Annulla</button></Link>
-                }
+              <button type="submit">Conferma</button>
+              <Link to="/books"><button>Annulla</button></Link>
               </div>
             </form>
             {validationError && <p style={{ color: 'red' }}>{validationError}</p>}
@@ -127,4 +126,4 @@ const EditBook = observer(() => {
   )
 });
 
-export default EditBook;
+export default AddBook;

@@ -40,6 +40,7 @@ class BookStore {
       fetchBooks: action,
       fetchSingleBook: action,
       updateBook: action,
+      addBook: action,
     });
   }
 
@@ -124,6 +125,35 @@ class BookStore {
       console.error('Failed to update book:', error);
     }
   };
+
+  addBook = async (book: Partial<Book>): Promise<Book> => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      const response = await axios.post<Book>('http://localhost:3000/book', book, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const newBook = response.data;
+      console.log('Book added:', newBook);
+
+      runInAction(() => {
+        this.books.push(newBook);
+      });
+
+      return newBook;
+
+    } catch (error) {
+      console.error('Failed to add book:', error);
+      throw error; // Rilancia l'errore per gestirlo nel componente
+    }
+  };
+
 }
 
 const bookStore = new BookStore();
