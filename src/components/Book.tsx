@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import Navbar from './Navbar';
 import { useBookStore } from '../stores/book/useBookStore';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css'
 import { observer } from 'mobx-react-lite';
@@ -10,6 +10,8 @@ import { observer } from 'mobx-react-lite';
 const Book = observer(() => {
   const { books, fetchBooks, setBooks, pagination } = useBookStore();
   const { loginStatus } = useAuthStore();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Se l'utente è loggato effettua la chiamata API
@@ -28,6 +30,7 @@ const Book = observer(() => {
     [loginStatus, fetchBooks, setBooks]);
 
   const handlePageChange = (newPage: number) => {
+    navigate('/books');
     // fetchBooks accetta i seguenti parametri: const fetchBooks = async (page: number = 1, pageSize: number = 10)
     // Chiama fetchBooks con il nuovo numero di pagina, lasciando pageSize al suo default di 10
     fetchBooks(newPage);
@@ -37,9 +40,19 @@ const Book = observer(() => {
     <>
       <Navbar />
       <h1>Book.tsx</h1>
+      {/* Messaggio di stato */}
+      <div style={{ height: '70px' }}>
+        {location.state?.message &&
+          <div className="card">
+            <p style={{ color: 'green' }}>{location.state.message}</p>
+          </div>
+        }
+      </div>
+
       <div className="book-container">
         <div className="book-list">
           <div className='book-list-wrapper'>
+
             {loginStatus && books.length > 0 ? (
               <>
                 <h2>Lista dei titoli dei libri:</h2>
@@ -88,25 +101,15 @@ const Book = observer(() => {
               </div>
             )}
           </div>
-          <div>
-            <Link to={`/books/add`}><button>Aggiungiun nuovo libro</button></Link>
-          </div>
+
+          {loginStatus &&
+            (
+              <div style={{ marginTop: '1rem' }}>
+                <Link to={`/books/add`}><button>Aggiungiun nuovo libro</button></Link>
+              </div>
+            )}
+
         </div>
-
-
-        {/* <div className="book-list">
-
-          {loginStatus ? (
-            <h2>Lista dei titoli dei libri:</h2>
-          ) : (
-            <h2>Effettua il Login per accedere alla lista dei libri</h2>
-          )}
-          {books.map(book => (
-            <Link key={book._id} to={`/books/${book._id}`}>
-              <p className="book">{book.title}</p>
-            </Link>
-          ))}
-        </div> */}
 
         <div className="book-details">
           <Outlet />

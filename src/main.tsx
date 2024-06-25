@@ -17,6 +17,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
   },
+  // Book
   {
     path: "/books",
     element: (
@@ -51,6 +52,15 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  // Trashed
+  {
+    path: "/trashed",
+    element: (
+      <BookProvider>
+        <Book />
+      </BookProvider>
+    ),
   },
 ]);
 

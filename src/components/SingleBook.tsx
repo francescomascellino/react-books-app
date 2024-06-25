@@ -1,14 +1,14 @@
 import { useEffect } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useBookStore } from '../stores/book/useBookStore';
 import { useAuthStore } from "../stores/auth/useAuthStore";
 import { observer } from "mobx-react-lite";
 
 const SingleBook = observer(() => {
   const { bookID } = useParams<{ bookID?: string }>();
-  const { fetchSingleBook, singleBook } = useBookStore();
+  const { fetchSingleBook, softDeleteBook, singleBook } = useBookStore();
   const { loginStatus } = useAuthStore();
-  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (bookID) {
@@ -20,6 +20,16 @@ const SingleBook = observer(() => {
 
     [bookID, fetchSingleBook]);
 
+  const handleSoftDelete = async () => {
+    try {
+      await softDeleteBook(bookID!);
+      console.log('Book moved to trash successfully');
+      navigate(`/books`, { state: { message: 'Libro spostato nel cestino con successo' } });
+    } catch (error) {
+      console.error('Failed to move book to trash:', error);
+    }
+  };
+
   return (
     <>
       <div>
@@ -27,12 +37,12 @@ const SingleBook = observer(() => {
 
         {loginStatus ? (
           <>
-            {/* Messaggio di stato */}
+            {/* Messaggio di stato
             {location.state?.message &&
               <div className="card">
                 <p style={{ color: 'green' }}>{location.state.message}</p>
               </div>
-            }
+            } */}
 
             <div className="card">
               {singleBook ? (
@@ -47,6 +57,7 @@ const SingleBook = observer(() => {
               )}
             </div>
             <Link to={`/books/${bookID}/edit`}><button>Modifica</button></Link>
+            <button onClick={handleSoftDelete}>Sposta nel Cestino</button>
           </>
         ) : (
           <h2>Effettua il Login per accedere ai dettagli del libro</h2>

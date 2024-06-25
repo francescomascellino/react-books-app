@@ -15,23 +15,6 @@ const AddBook = observer(() => {
   const [validationError, setValidationError] = useState('');
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (bookID) {
-  //     fetchSingleBook(bookID);
-  //     console.log(`Book with ID ${bookID}`, singleBook);
-
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [bookID]);
-
-  // useEffect(() => {
-  //   if (singleBook) {
-  //     setTitle(singleBook.title);
-  //     setAuthor(singleBook.author);
-  //     setISBN(singleBook.ISBN);
-  //   }
-  // }, [singleBook]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

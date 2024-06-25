@@ -5,7 +5,8 @@ function Navbar() {
   return (
     <nav className="navbar">
       <Link to={"/"}>Home</Link>
-      <Link to={"/books"}>Books</Link>
+      <Link to={"/books"}>Libri</Link>
+      <Link to={"/trashed"}>Cestino</Link>
     </nav>
   );
 }

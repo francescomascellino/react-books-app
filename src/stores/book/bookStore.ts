@@ -41,6 +41,7 @@ class BookStore {
       fetchSingleBook: action,
       updateBook: action,
       addBook: action,
+      softDeleteBook: action,
     });
   }
 
@@ -150,6 +151,29 @@ class BookStore {
 
     } catch (error) {
       console.error('Failed to add book:', error);
+      throw error; // Rilancia l'errore per gestirlo nel componente
+    }
+  };
+
+  softDeleteBook = async (bookID: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      await axios.patch(`http://localhost:3000/book/delete/${bookID}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Fetch tutti i libri dopo il soft delete
+      await this.fetchBooks();
+
+      console.log('Book soft deleted with ID:', bookID);
+    } catch (error) {
+      console.error('Failed to soft delete book:', error);
       throw error; // Rilancia l'errore per gestirlo nel componente
     }
   };
