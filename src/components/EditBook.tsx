@@ -40,7 +40,7 @@ const EditBook = observer(() => {
       if (bookID) {
         await updateBook(bookID, { title, author, ISBN });
         console.log('Book updated successfully');
-        fetchBooks(pagination?.page)
+        await fetchBooks(pagination?.page)
         // Naviga alla pagina del singolo libro con un messaggio di successo
         navigate(`/books/${bookID}`, { state: { message: 'Libro aggiornato con successo' } });
       } else {
@@ -59,7 +59,9 @@ const EditBook = observer(() => {
         }
       } else {
         setValidationError(`Errore durante l'aggiornamento del libro: ${error}`);
+        console.log(error);
       }
+
     }
   };
 
@@ -79,7 +81,8 @@ const EditBook = observer(() => {
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  minLength={2}
+                  // COMMENTATO PER PERMETTERE LA GENERAZIONE RAPIDA DI ERRORI
+                  // minLength={2}
                   maxLength={50}
                   required
                 />

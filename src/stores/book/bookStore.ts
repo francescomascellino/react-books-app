@@ -1,5 +1,5 @@
 // import { useCallback, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
 interface Book {
@@ -28,14 +28,18 @@ interface PaginatedBooks {
 
 class BookStore {
   books: Book[] = [];
+  trashedBooks: Book[] = [];
   singleBook: Book | null = null;
   pagination: PaginatedBooks | null = null;
+  error: Error | AxiosError | null = null;
 
   constructor() {
     makeObservable(this, {
       books: observable,
       singleBook: observable,
       pagination: observable,
+      trashedBooks: observable,
+      error: observable,
       setBooks: action,
       fetchBooks: action,
       fetchSingleBook: action,
@@ -99,6 +103,13 @@ class BookStore {
       console.log('Single Book', this.singleBook);
 
     } catch (error) {
+      runInAction(() => {
+        if (error instanceof Error || axios.isAxiosError(error)) {
+          this.error = error;
+        } else {
+          this.error = new Error('Unknown error');
+        }
+      });
       console.error('Failed to fetch single book:', error);
     }
   };
@@ -123,6 +134,13 @@ class BookStore {
         }
       });
     } catch (error) {
+      runInAction(() => {
+        if (error instanceof Error || axios.isAxiosError(error)) {
+          this.error = error;
+        } else {
+          this.error = new Error('Unknown error');
+        }
+      });
       console.error('Failed to update book:', error);
     }
   };
@@ -176,6 +194,40 @@ class BookStore {
       console.error('Failed to soft delete book:', error);
       throw error; // Rilancia l'errore per gestirlo nel componente
     }
+  };
+
+  fetchTrashed = async (
+    page: number = 1, pageSize: number = 10
+
+  ) => {
+    try {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      const response = await axios.get(`http://localhost:3000/book/delete??page=${page}&pageSize=${pageSize}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      runInAction(() => {
+        this.trashedBooks = response.data.docs;
+        console.log('trash',this.trashedBooks);
+        
+        this.pagination = response.data;
+      });
+    } catch (error) {
+      console.error('Failed to fetch books:', error);
+    }
+  };
+
+  clearError = () => {
+    runInAction(() => {
+      this.error = null;
+    });
   };
 
 }

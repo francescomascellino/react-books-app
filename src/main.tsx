@@ -8,9 +8,9 @@ import Book from './components/Book.tsx';
 import EditBook from './components/EditBook.tsx';
 import AddBook from './components/AddBook.tsx';
 import SingleBook from './components/SingleBook.tsx';
+import TrashedBooks from './components/TrashedBooks.tsx';
 import './assets/css/index.css';
 import { BookProvider } from './stores/book/BookProvider.tsx';
-
 
 const router = createBrowserRouter([
   {
@@ -58,9 +58,19 @@ const router = createBrowserRouter([
     path: "/trashed",
     element: (
       <BookProvider>
-        <Book />
+        <TrashedBooks />
       </BookProvider>
     ),
+    children: [
+      {
+        path: ":bookID",
+        element: (
+          <BookProvider>
+            <SingleBook />
+          </BookProvider>
+        ),
+      },
+    ],
   },
 ]);
 

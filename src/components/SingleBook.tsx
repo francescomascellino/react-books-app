@@ -1,24 +1,43 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useBookStore } from '../stores/book/useBookStore';
 import { useAuthStore } from "../stores/auth/useAuthStore";
 import { observer } from "mobx-react-lite";
+import axios, { AxiosError } from "axios";
 
 const SingleBook = observer(() => {
   const { bookID } = useParams<{ bookID?: string }>();
-  const { fetchSingleBook, softDeleteBook, singleBook } = useBookStore();
+  const { fetchSingleBook, softDeleteBook, singleBook, error, clearError } = useBookStore();
   const { loginStatus } = useAuthStore();
   const navigate = useNavigate();
+  const [validationError, setValidationError] = useState('');
 
   useEffect(() => {
     if (bookID) {
       console.log(`BookID Changed ${bookID}`);
-
       fetchSingleBook(bookID);
     }
-  },
+  }, [bookID, fetchSingleBook]);
 
-    [bookID, fetchSingleBook]);
+  useEffect(() => {
+    if (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message: string[] }>;
+        if (axiosError.response?.data && axiosError.response.data.message) {
+          const validationError = axiosError.response.data.message;
+          console.log(validationError);
+          setValidationError(`Errore durante l'aggiornamento del libro: ${validationError}`);
+        } else {
+          setValidationError(`Errore durante l'aggiornamento del libro: ${error.message}`);
+          console.log(error.message);
+        }
+      } else {
+        setValidationError(`Errore durante l'aggiornamento del libro: ${error.message}`);
+        console.log(error.message);
+      }
+      clearError();
+    }
+  }, [error, clearError]);
 
   const handleSoftDelete = async () => {
     try {
@@ -62,6 +81,10 @@ const SingleBook = observer(() => {
         ) : (
           <h2>Effettua il Login per accedere ai dettagli del libro</h2>
         )}
+
+        <div>
+          {validationError && <p style={{ color: 'red' }}>{validationError}</p>}
+        </div>
       </div>
     </>
 
