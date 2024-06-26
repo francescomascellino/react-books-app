@@ -33,27 +33,26 @@ const Navbar = observer(() => {
 
   return (
     <nav className="navbar">
-      {/* Mostra il link alla pagina di login se l'utente non è loggato */}
-      {!loginStatus &&
-        (
-          <>
-            <Link to={"/"}>Login</Link>
-          </>
-        )
-      }
 
       <Link to={"/books"}>Libri</Link>
       <Link to={"/trashed"}>Cestino</Link>
 
-      {/* Mostra il pulsante logout se l'utente è loggato */}
-      {loginStatus &&
+      {/* Mostra il link alla pagina di login se l'utente non è loggato */}
+      {!loginStatus ?
+        (
+          <>
+            <div className='user-panel'>
+              <Link to={"/"}>Login</Link>
+            </div>
+          </>
+        ) :
+        /* Mostra il pulsante logout se l'utente è loggato *//* Mostra il link alla pagina di login se l'utente non è loggato */
         (
           <>
             <div className='user-panel'>
               <span>Benvnuto, {localStorage.getItem('userName')}!</span>
               <a onClick={handleLogout}>Logout</a>
             </div>
-
           </>
         )
       }
