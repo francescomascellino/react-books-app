@@ -103,7 +103,7 @@ const Book = observer(() => {
                 <Link to={`/books/add`}><button>Aggiungiun nuovo libro</button></Link>
 
                 {/* MUI VARIANT */}
-                <Button variant="contained" component={Link} to="/books/add">Aggiungi un nuovo libro</Button>
+                <Button variant="contained" size="small" component={Link} to="/books/add" >Aggiungi un nuovo libro</Button>
               </div>
             )}
 

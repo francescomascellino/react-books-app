@@ -53,6 +53,21 @@ const darkTheme = createTheme({
     },
     */
   },
+
+  components: {
+
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            color: '#132b82',
+          },
+        },
+      },
+    }
+
+  }
+
 });
 
 export default darkTheme;
