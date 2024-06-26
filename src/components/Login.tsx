@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import { observer } from 'mobx-react-lite';
 // import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,14 @@ const Login = observer(() => {
   const { login, logout, setLoginStatus, loginStatus } = useAuthStore();
 
   // const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      setLoginStatus(true); // Imposta loginStatus su true se c'è un token in localStorage
+      console.log(`User ${localStorage.getItem('userName')} is already logged in with Token:`, localStorage.getItem('token'));
+      
+    }
+  }, [setLoginStatus]);
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -26,7 +34,7 @@ const Login = observer(() => {
       setError(''); // Svuota il error
 
       if (localStorage.getItem('token') !== null) {
-        setLoginStatus(true)
+        // setLoginStatus(true)
         console.log(`Can login Again? ${loginStatus}`);
       }
       // navigate('/books');
@@ -42,7 +50,7 @@ const Login = observer(() => {
 
     if (localStorage.getItem('token') === null) {
       console.log('Token after logout:', localStorage.getItem('token'));
-      setLoginStatus(false);
+      // setLoginStatus(false);
       console.log(`Can login Again? ${loginStatus}`);
     }
 

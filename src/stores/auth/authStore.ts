@@ -5,7 +5,7 @@ class AuthStore {
   token: string | null = localStorage.getItem('token') || null;
   userName: string | null = localStorage.getItem('userName') || null;
   error: string | null = null;
-  loginStatus: boolean = false;
+  loginStatus: boolean = !!localStorage.getItem('token'); // Imposta loginStatus su true se c'è un token in localStorage
 
   constructor() {
     makeObservable(
@@ -16,7 +16,7 @@ class AuthStore {
         login: action.bound,
         logout: action.bound,
         loginStatus: observable,
-        setLoginStatus: action.bound
+        setLoginStatus: action.bound,
       }
     );
   }
@@ -41,6 +41,8 @@ class AuthStore {
 
       this.error = null;
 
+      this.setLoginStatus(true);
+
       console.log('Token from store:', this.token);
       console.log('Username from store:', this.userName);
       return Promise.resolve(this.token);
@@ -51,6 +53,9 @@ class AuthStore {
       this.token = null;
       this.error = 'Invalid username or password!';
       console.error('Login failed:', error);
+
+      this.setLoginStatus(false);
+
       // throw error;
       return Promise.reject(error);
     }
@@ -62,6 +67,7 @@ class AuthStore {
     localStorage.removeItem('token');
     this.userName = null;
     localStorage.removeItem('userName');
+    this.setLoginStatus(false);
   }
 
 }
