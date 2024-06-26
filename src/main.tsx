@@ -9,8 +9,10 @@ import EditBook from './components/EditBook.tsx';
 import AddBook from './components/AddBook.tsx';
 import SingleBook from './components/SingleBook.tsx';
 import TrashedBooks from './components/TrashedBooks.tsx';
+import SingleTrashedBook from './components/SingleTrashedBook.tsx';
 import './assets/css/index.css';
 import { BookProvider } from './stores/book/BookProvider.tsx';
+
 
 const router = createBrowserRouter([
   {
@@ -66,7 +68,7 @@ const router = createBrowserRouter([
         path: ":bookID",
         element: (
           <BookProvider>
-            <SingleBook />
+            <SingleTrashedBook />
           </BookProvider>
         ),
       },

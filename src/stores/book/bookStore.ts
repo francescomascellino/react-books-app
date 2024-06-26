@@ -224,6 +224,40 @@ class BookStore {
     }
   };
 
+  fetchSingleSoftDeletedBook = async (bookID: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      runInAction(() => {
+        this.singleBook = null;
+      })
+
+      const response = await axios.get<Book>(`http://localhost:3000/book/delete/${bookID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      runInAction(() => {
+        this.singleBook = response.data;
+      });
+      console.log('Single Trashed Book', this.singleBook);
+
+    } catch (error) {
+      runInAction(() => {
+        if (error instanceof Error || axios.isAxiosError(error)) {
+          this.error = error;
+        } else {
+          this.error = new Error('Unknown error');
+        }
+      });
+      console.error('Failed to fetch single trashed book:', error);
+    }
+  };
+
   clearError = () => {
     runInAction(() => {
       this.error = null;
