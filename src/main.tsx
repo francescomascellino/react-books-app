@@ -11,7 +11,14 @@ import SingleBook from './components/SingleBook.tsx';
 import TrashedBooks from './components/TrashedBooks.tsx';
 import SingleTrashedBook from './components/SingleTrashedBook.tsx';
 import './assets/css/index.css';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import { BookProvider } from './stores/book/BookProvider.tsx';
+import { ThemeProvider } from '@mui/material/styles';
+import darkTheme from './assets/themes/theme.ts';
+import { CssBaseline } from '@mui/material';
 
 
 const router = createBrowserRouter([
@@ -27,9 +34,12 @@ const router = createBrowserRouter([
     path: "/books",
     element: (
       // Avvolgiamo le rotte nel contesto
-      <BookProvider>
-        <Book />
-      </BookProvider>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <BookProvider>
+          <Book />
+        </BookProvider>
+      </ThemeProvider>
     ),
     children: [
       {
@@ -63,9 +73,12 @@ const router = createBrowserRouter([
   {
     path: "/trashed",
     element: (
-      <BookProvider>
-        <TrashedBooks />
-      </BookProvider>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <BookProvider>
+          <TrashedBooks />
+        </BookProvider>
+      </ThemeProvider>
     ),
     children: [
       {

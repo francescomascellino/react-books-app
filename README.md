@@ -442,6 +442,12 @@ function Navbar() {
 export default Navbar;
 ```
 
+MUI
+```ts
+{/* Diciamo a MUI di wrappare il bottone con il componente Link e diamo il valore di to="*/}
+<Button variant="contained" component={Link} to="/books/add">Aggiungi un nuovo libro</Button>
+```
+
 ### Links con Outlet
 
 **<Outlet />** viene utilizzato per indicare il punto in cui i componenti figli delle rotte annidate verranno renderizzati. Questo è particolarmente utile quando si definiscono rotte annidate, come nel caso dell'esempio Book che potrebbe avere rotte come ***/books/:bookID*** e ***/books/:bookID/edit***.

@@ -9,6 +9,9 @@ import {
 import Navbar from './Navbar';
 import '../assets/css/book.css'
 
+import Pagination from '@mui/material/Pagination';
+// The Stack component manages the layout of its immediate children along the vertical or horizontal axis, with optional spacing and dividers between each child.
+import Stack from '@mui/material/Stack';
 
 // Wrappiamo il componente cob observer()
 const Book = observer(() => {
@@ -32,6 +35,12 @@ const Book = observer(() => {
     newPage: number
 
   ) => {
+    navigate('/trashed');
+    fetchTrashed(newPage);
+  };
+
+  const muiPageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    event.preventDefault();
     navigate('/trashed');
     fetchTrashed(newPage);
   };
@@ -101,6 +110,36 @@ const Book = observer(() => {
                 </button>
               </div>
             )}
+
+            {/* MUI Pagination */}
+            {pagination && loginStatus && (
+              <Stack spacing={2}
+              // sx={{ color: 'rgba(255, 255, 255, 0.87)' }}
+              >
+                <Pagination
+                /* 
+                  sx={{
+                    '& .MuiPaginationItem-root': {
+                      color: 'rgba(255, 255, 255, 0.87)',
+                      '&.Mui-selected': {
+                        backgroundColor: '#535bf2',
+                        color: '#fff',
+                      },
+                      '&:hover': {
+                        backgroundColor: '#646cff',
+                      },
+                    },
+                  }}
+                   */
+                  count={pagination.totalPages}
+                  page={pagination.page}
+                  onChange={muiPageChange}
+                  showFirstButton
+                  showLastButton
+                />
+              </Stack>
+            )}
+
           </div>
 
         </div>
