@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
-import Navbar from './Navbar';
-import { useBookStore } from '../stores/book/useBookStore';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../stores/auth/useAuthStore';
-import '../assets/css/book.css'
 import { observer } from 'mobx-react-lite';
+import { useBookStore } from '../stores/book/useBookStore';
+import { useAuthStore } from '../stores/auth/useAuthStore';
+import Navbar from './Navbar';
+import '../assets/css/book.css'
+
 
 // Wrappiamo il componente cob observer()
 const Book = observer(() => {

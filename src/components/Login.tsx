@@ -1,13 +1,17 @@
 
 import { useState } from 'react';
 import { useAuthStore } from '../stores/auth/useAuthStore';
+import { observer } from 'mobx-react-lite';
+// import { useNavigate } from 'react-router-dom';
 
-function Login() {
+const Login = observer(() => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const { login, logout, setLoginStatus, loginStatus } = useAuthStore();
+
+  // const navigate = useNavigate();
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -25,7 +29,7 @@ function Login() {
         setLoginStatus(true)
         console.log(`Can login Again? ${loginStatus}`);
       }
-
+      // navigate('/books');
     } catch (error) {
       console.error('Login failed:', error);
       setError(`${error}`);
@@ -78,7 +82,12 @@ function Login() {
 
             {/* Mostra il pulsante logout se l'utente è loggato */}
             {loginStatus &&
-              (<button onClick={handleLogout}>Logout</button>)
+              (
+                <>
+                  <h1>Benvnuto, {localStorage.getItem('userName')}!</h1>
+                  <button onClick={handleLogout}>Logout</button>
+                </>
+              )
             }
           </div>
 
@@ -89,6 +98,6 @@ function Login() {
       </div>
     </>
   )
-}
+});
 
 export default Login
