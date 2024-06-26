@@ -53,18 +53,23 @@ const Book = observer(() => {
         <div className="book-list">
           <div className='book-list-wrapper'>
 
-            {loginStatus && books.length > 0 ? (
-              <>
-                <h2>Lista dei titoli dei libri:</h2>
-                {books.map((book) => (
-                  <Link key={book._id} to={`/books/${book._id}`}>
-                    <p className="book">{book.title}</p>
-                  </Link>
-                ))}
-              </>
+            {loginStatus ? (
+              books.length > 0 ? (
+                <>
+                  <h2>Lista dei libri:</h2>
+                  {books.map((book) => (
+                    <Link key={book._id} to={`/trashed/${book._id}`}>
+                      <p className="book">{book.title}</p>
+                    </Link>
+                  ))}
+                </>
+              ) : (
+                <h2>Il Database dei Libri è vuoto!</h2>
+              )
             ) : (
-              <h2>Effettua il Login per accedere alla lista dei libri</h2>
+              <h2>Effettua il Login per accedere al Database</h2>
             )}
+
           </div>
           <div>
             {/* Paginazione */}
