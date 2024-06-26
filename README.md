@@ -348,24 +348,69 @@ import './assets/css/index.css';
 
 // Creiamo l'istanza del router utilizzando createBrowserRouter da React Router DOM.
 const router = createBrowserRouter([
+  // Root
   {
     path: "/",
     element: <App />,
   },
+
+  // Book
   {
     path: "/books",
-    element: <Book />,
+    element: (
+      // Avvolgiamo le rotte nel contesto
+      <BookProvider>
+        <Book />
+      </BookProvider>
+    ),
     children: [
       {
         path: ":bookID",
-        element: <SingleBook />
+        element: (
+          <BookProvider>
+            <SingleBook />
+          </BookProvider>
+        ),
       },
       {
         path: ":bookID/edit",
-        element: <EditBook />
-      }
+        element: (
+          <BookProvider>
+            <EditBook />
+          </BookProvider>
+        ),
+      },
+      {
+        path: "add",
+        element: (
+          <BookProvider>
+            <AddBook />
+          </BookProvider>
+        ),
+      },
     ],
   },
+
+  // Trashed
+  {
+    path: "/trashed",
+    element: (
+      <BookProvider>
+        <TrashedBooks />
+      </BookProvider>
+    ),
+    children: [
+      {
+        path: ":bookID",
+        element: (
+          <BookProvider>
+            <SingleTrashedBook />
+          </BookProvider>
+        ),
+      },
+    ],
+  },
+
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

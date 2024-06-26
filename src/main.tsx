@@ -15,10 +15,13 @@ import { BookProvider } from './stores/book/BookProvider.tsx';
 
 
 const router = createBrowserRouter([
+
+  // Root
   {
     path: "/",
     element: <App />,
   },
+
   // Book
   {
     path: "/books",
@@ -55,6 +58,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+
   // Trashed
   {
     path: "/trashed",
@@ -74,6 +78,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
