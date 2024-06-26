@@ -7,7 +7,7 @@ import axios, { AxiosError } from "axios";
 
 const SingleTrashedBook = observer(() => {
   const { bookID } = useParams<{ bookID?: string }>();
-  const { fetchSingleSoftDeletedBook, softDeleteBook, singleBook, error, clearError } = useBookStore();
+  const { fetchSingleSoftDeletedBook, deleteBook, singleBook, error, clearError } = useBookStore();
   const { loginStatus } = useAuthStore();
   const navigate = useNavigate();
   const [validationError, setValidationError] = useState('');
@@ -39,13 +39,13 @@ const SingleTrashedBook = observer(() => {
     }
   }, [error, clearError]);
 
-  const handleSoftDelete = async () => {
+  const handleDelete = async () => {
     try {
-      await softDeleteBook(bookID!);
-      console.log('Book moved to trash successfully');
-      navigate(`/books`, { state: { message: 'Libro spostato nel cestino con successo' } });
+      await deleteBook(bookID!);
+      console.log('Book deleted successfully');
+      navigate(`/trashed`, { state: { message: 'Libro eliminato definitivamente con successo' } });
     } catch (error) {
-      console.error('Failed to move book to trash:', error);
+      console.error('Failed to delete book:', error);
     }
   };
 
@@ -76,9 +76,9 @@ const SingleTrashedBook = observer(() => {
               )}
             </div>
             {/* <Link to={`/books/${bookID}/edit`}><button>Modifica</button></Link> */}
-            {/* <button onClick={handleSoftDelete}>Sposta nel Cestino</button> */}
-            <button onClick={handleSoftDelete}>Ripristina</button>
-            <button onClick={handleSoftDelete}>Elimina definitivamente</button>
+            {/* <button onClick={handleDelete}>Sposta nel Cestino</button> */}
+            <button onClick={handleDelete}>Ripristina</button>
+            <button onClick={handleDelete}>Elimina definitivamente</button>
           </>
         ) : (
           <h2>Effettua il Login per accedere ai dettagli del libro</h2>

@@ -258,6 +258,29 @@ class BookStore {
     }
   };
 
+  deleteBook = async (bookID: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found in localStorage');
+      }
+
+      await axios.delete(`http://localhost:3000/book/delete/${bookID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Fetch tutti i libri dopo il soft delete
+      await this.fetchTrashed();
+
+      console.log('Book deleted with ID:', bookID);
+    } catch (error) {
+      console.error('Failed to delete book:', error);
+      throw error; // Rilancia l'errore per gestirlo nel componente
+    }
+  };
+
   clearError = () => {
     runInAction(() => {
       this.error = null;
