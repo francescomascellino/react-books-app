@@ -9,9 +9,6 @@ import { useAuthStore } from '../stores/auth/useAuthStore';
 
 import '../assets/css/navbar.css';
 
-
-
-
 const Navbar = observer(() => {
   const { logout, setLoginStatus, loginStatus } = useAuthStore();
   // const navigate = useNavigate();
