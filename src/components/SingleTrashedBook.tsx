@@ -7,7 +7,7 @@ import axios, { AxiosError } from "axios";
 
 const SingleTrashedBook = observer(() => {
   const { bookID } = useParams<{ bookID?: string }>();
-  const { fetchSingleSoftDeletedBook, deleteBook, singleBook, error, clearError } = useBookStore();
+  const { fetchSingleSoftDeletedBook, deleteBook, restoreBook, singleBook, error, clearError } = useBookStore();
   const { loginStatus } = useAuthStore();
   const navigate = useNavigate();
   const [validationError, setValidationError] = useState('');
@@ -49,6 +49,16 @@ const SingleTrashedBook = observer(() => {
     }
   };
 
+  const handleRestore = async () => {
+    try {
+      await restoreBook(bookID!);
+      console.log('Book restored successfully');
+      navigate(`/trashed`, { state: { message: 'Libro ripristinato con successo' } });
+    } catch (error) {
+      console.error('Failed to restore book:', error);
+    }
+  };
+
   return (
     <>
       <div>
@@ -77,7 +87,7 @@ const SingleTrashedBook = observer(() => {
             </div>
             {/* <Link to={`/books/${bookID}/edit`}><button>Modifica</button></Link> */}
             {/* <button onClick={handleDelete}>Sposta nel Cestino</button> */}
-            <button onClick={handleDelete}>Ripristina</button>
+            <button onClick={handleRestore}>Ripristina</button>
             <button onClick={handleDelete}>Elimina definitivamente</button>
           </>
         ) : (

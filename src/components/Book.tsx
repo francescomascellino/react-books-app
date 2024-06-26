@@ -58,7 +58,7 @@ const Book = observer(() => {
                 <>
                   <h2>Lista dei libri:</h2>
                   {books.map((book) => (
-                    <Link key={book._id} to={`/trashed/${book._id}`}>
+                    <Link key={book._id} to={`/books/${book._id}`}>
                       <p className="book">{book.title}</p>
                     </Link>
                   ))}
