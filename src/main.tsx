@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import { AuthProvider } from './stores/auth/AuthProvider.tsx';
+import Login from './components/Login.tsx';
 import Book from './components/Book.tsx';
 import EditBook from './components/EditBook.tsx';
 import AddBook from './components/AddBook.tsx';
@@ -15,9 +16,6 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { BookProvider } from './stores/book/BookProvider.tsx';
-import { ThemeProvider } from '@mui/material/styles';
-import { darkTheme } from './assets/themes/theme';
-import { CssBaseline } from '@mui/material';
 
 const router = createBrowserRouter([
 
@@ -25,13 +23,74 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
         <BookProvider>
           <App />
         </BookProvider>
-      </ThemeProvider>
     ),
+    children: [
+
+      {
+        index: true,
+        element: <Login /> // Renderizza "Logim" per il percorso "/"
+      },
+
+      // Book
+      {
+        path: "/books",
+        element: (
+          // Avvolgiamo le rotte nel contesto
+            <BookProvider>
+              <Book />
+            </BookProvider>
+        ),
+        children: [
+          {
+            path: ":bookID",
+            element: (
+              <BookProvider>
+                <SingleBook />
+              </BookProvider>
+            ),
+          },
+          {
+            path: ":bookID/edit",
+            element: (
+              <BookProvider>
+                <EditBook />
+              </BookProvider>
+            ),
+          },
+          {
+            path: "add",
+            element: (
+              <BookProvider>
+                <AddBook />
+              </BookProvider>
+            ),
+          },
+        ],
+      },
+
+      // Trashed
+      {
+        path: "/trashed",
+        element: (
+            <BookProvider>
+              <TrashedBooks />
+            </BookProvider>
+        ),
+        children: [
+          {
+            path: ":bookID",
+            element: (
+              <BookProvider>
+                <SingleTrashedBook />
+              </BookProvider>
+            ),
+          },
+        ],
+      },
+    ]
   },
 
   // Book
@@ -39,12 +98,9 @@ const router = createBrowserRouter([
     path: "/books",
     element: (
       // Avvolgiamo le rotte nel contesto
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
         <BookProvider>
           <Book />
         </BookProvider>
-      </ThemeProvider>
     ),
     children: [
       {
@@ -78,12 +134,9 @@ const router = createBrowserRouter([
   {
     path: "/trashed",
     element: (
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
         <BookProvider>
           <TrashedBooks />
         </BookProvider>
-      </ThemeProvider>
     ),
     children: [
       {

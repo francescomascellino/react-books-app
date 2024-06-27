@@ -6,7 +6,7 @@ import {
   Link, Outlet, useLocation,
   useNavigate
 } from 'react-router-dom';
-import Navbar from './Navbar';
+// import Navbar from './Navbar';
 import '../assets/css/book.css'
 
 import Pagination from '@mui/material/Pagination';
@@ -39,7 +39,7 @@ const Book = observer(() => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <h1>TrashedBooks.tsx</h1>
       {/* Messaggio di stato */}
       <div style={{ height: '70px' }}>

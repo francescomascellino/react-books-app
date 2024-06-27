@@ -27,7 +27,7 @@ export default darkTheme; */
 import { createTheme } from '@mui/material/styles';
 import { CSSObject } from '@mui/styled-engine';
 
-const createComponentStyles = (): { [componentName: string]: { styleOverrides?: { [className: string]: CSSObject } } } => ({
+const createCommonComponentStyles = (): { [componentName: string]: { styleOverrides?: { [className: string]: CSSObject } } } => ({
   MuiButton: {
     styleOverrides: {
       root: {
@@ -46,13 +46,25 @@ const themeOptions = {
     palette: {
       mode: 'dark',
     },
-    components: createComponentStyles(),
+    components: createCommonComponentStyles(),
   }),
   light: createTheme({
     palette: {
       mode: 'light',
     },
-    components: createComponentStyles(),
+    components: {
+      ...createCommonComponentStyles(),
+      MuiLink: {
+        styleOverrides: {
+          root: {
+            color: '#ffffffde',
+            '&:visited': {
+              color: '#ffffffde',
+            },
+          },
+        },
+      },
+    },
   }),
 };
 

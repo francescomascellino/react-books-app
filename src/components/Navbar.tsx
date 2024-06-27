@@ -6,6 +6,11 @@ import { Avatar, Box, Button, FormControlLabel, FormGroup, IconButton, Menu, Men
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
+interface NavbarProps {
+  themeMode: 'dark' | 'light';
+  handleThemeChange: () => void;
+}
+
 const pages = [
   { label: 'Libri', path: '/books' },
   { label: 'Cestino', path: '/trashed' }
@@ -15,7 +20,7 @@ const userMenu = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const avatarSrc = '';
 
-const Navbar = observer(() => {
+const Navbar: React.FC<NavbarProps> = observer(({ themeMode, handleThemeChange }) => {
   const { logout, setLoginStatus, loginStatus } = useAuthStore();
   const navigate = useNavigate();
   // const [error, setError] = useState<string | null>(null);
@@ -59,9 +64,8 @@ const Navbar = observer(() => {
     handleCloseUserMenu()
   };
 
-  const [checked, setChecked] = useState(true);
-  const handleThemeChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
-    setChecked(event.target.checked);
+  const handleSwitchChange = () => {
+    handleThemeChange();
   };
 
   return (
@@ -167,10 +171,10 @@ const Navbar = observer(() => {
 
         {/* Pulsante di switch del tema */}
         <FormGroup>
-        <FormControlLabel
-        control={<Switch checked={checked} onChange={handleThemeChange} />}
-        label={checked ? 'Dark' : 'Light'}
-      />
+          <FormControlLabel
+            control={<Switch checked={themeMode === 'dark'} onChange={handleSwitchChange} />}
+            label={themeMode.charAt(0).toUpperCase() + themeMode.slice(1)}
+          />
         </FormGroup>
 
         {/* User Menu */}

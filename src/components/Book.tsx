@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useBookStore } from '../stores/book/useBookStore';
 import { useAuthStore } from '../stores/auth/useAuthStore';
-import Navbar from './Navbar';
+// import Navbar from './Navbar';
 import '../assets/css/book.css'
 
 import Pagination from '@mui/material/Pagination';
@@ -48,7 +48,7 @@ const Book = observer(() => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <h1>Book.tsx</h1>
       {/* Messaggio di stato */}
       <div style={{ height: '70px' }}>
