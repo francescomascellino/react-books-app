@@ -5,6 +5,7 @@ import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css';
 import axios, { AxiosError } from 'axios';
 import { observer } from 'mobx-react-lite';
+import { Button } from '@mui/material';
 
 const EditBook = observer(() => {
   const { bookID } = useParams<{ bookID?: string }>();
@@ -112,9 +113,10 @@ const EditBook = observer(() => {
                 />
               </div>
               <div>
-                <button type="submit">Conferma</button>
+                <Button type="submit" variant="contained" size="medium" color='success'>Conferma</Button>
+
                 {singleBook &&
-                  <Link to={`/books/${singleBook._id}`}><button>Annulla</button></Link>
+                  <Button variant="contained" size="medium" color='warning' component={Link} to={`/books/${singleBook._id}`} >Annulla</Button>
                 }
               </div>
             </form>

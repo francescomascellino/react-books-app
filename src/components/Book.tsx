@@ -100,10 +100,7 @@ const Book = observer(() => {
           {loginStatus &&
             (
               <div style={{ marginTop: '1rem' }}>
-                <Link to={`/books/add`}><button>Aggiungiun nuovo libro</button></Link>
-
-                {/* MUI VARIANT */}
-                <Button variant="contained" size="small" component={Link} to="/books/add" >Aggiungi un nuovo libro</Button>
+                <Button variant="contained" size="medium" component={Link} to="/books/add" >Aggiungi un nuovo libro</Button>
               </div>
             )}
 

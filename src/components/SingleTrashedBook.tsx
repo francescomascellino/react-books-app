@@ -4,6 +4,7 @@ import { useBookStore } from '../stores/book/useBookStore';
 import { useAuthStore } from "../stores/auth/useAuthStore";
 import { observer } from "mobx-react-lite";
 import axios, { AxiosError } from "axios";
+import { Button } from "@mui/material";
 
 const SingleTrashedBook = observer(() => {
   const { bookID } = useParams<{ bookID?: string }>();
@@ -66,13 +67,6 @@ const SingleTrashedBook = observer(() => {
 
         {loginStatus ? (
           <>
-            {/* Messaggio di stato
-            {location.state?.message &&
-              <div className="card">
-                <p style={{ color: 'green' }}>{location.state.message}</p>
-              </div>
-            } */}
-
             <div className="card">
               {singleBook ? (
                 <>
@@ -85,10 +79,9 @@ const SingleTrashedBook = observer(() => {
                 <p>Loading...</p>
               )}
             </div>
-            {/* <Link to={`/books/${bookID}/edit`}><button>Modifica</button></Link> */}
-            {/* <button onClick={handleDelete}>Sposta nel Cestino</button> */}
-            <button onClick={handleRestore}>Ripristina</button>
-            <button onClick={handleDelete}>Elimina definitivamente</button>
+            <Button variant="contained" size="medium" color='success' onClick={handleRestore}>Ripristina</Button>
+
+            <Button variant="contained" size="medium" color='error' onClick={handleDelete}>Elimina definitivamente</Button>
           </>
         ) : (
           <h2>Effettua il Login per accedere ai dettagli del libro</h2>

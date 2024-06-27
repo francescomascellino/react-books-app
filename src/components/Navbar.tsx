@@ -155,7 +155,7 @@ const Navbar = observer(() => {
               key={page.label}
               component={Link}
               to={page.path}
-              sx={{ my: 2, color: 'white', display: 'block' }}
+              sx={{ my: 2, display: 'block' }}
             >
               {page.label}
             </Button>

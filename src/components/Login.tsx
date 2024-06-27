@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import { observer } from 'mobx-react-lite';
+import { Button } from '@mui/material';
 // import { useNavigate } from 'react-router-dom';
 
 const Login = observer(() => {
@@ -17,7 +18,7 @@ const Login = observer(() => {
     if (localStorage.getItem('token')) {
       setLoginStatus(true); // Imposta loginStatus su true se c'è un token in localStorage
       console.log(`User ${localStorage.getItem('userName')} is already logged in with Token:`, localStorage.getItem('token'));
-      
+
     }
   }, [setLoginStatus]);
 
@@ -85,7 +86,11 @@ const Login = observer(() => {
           <div>
             {/* Mostra il pulsante login se l'utente non è loggato */}
             {!loginStatus &&
-              (<button type="submit" >Login</button>)
+              (
+                <>
+                  <Button type="submit" variant="contained" size="medium">Login</Button>
+                </>
+              )
             }
 
             {/* Mostra il pulsante logout se l'utente è loggato */}
@@ -93,7 +98,7 @@ const Login = observer(() => {
               (
                 <>
                   <h1>Benvnuto, {localStorage.getItem('userName')}!</h1>
-                  <button onClick={handleLogout}>Logout</button>
+                  <Button variant="contained" size="medium" color='error' onClick={handleLogout}>Logout</Button>
                 </>
               )
             }

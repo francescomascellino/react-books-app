@@ -31,15 +31,7 @@ const Book = observer(() => {
   },
     [loginStatus, fetchTrashed, setBooks]);
 
-  const handlePageChange = (
-    newPage: number
-
-  ) => {
-    navigate('/trashed');
-    fetchTrashed(newPage);
-  };
-
-  const muiPageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+  const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
     event.preventDefault();
     navigate('/trashed');
     fetchTrashed(newPage);
@@ -81,59 +73,14 @@ const Book = observer(() => {
 
           </div>
           <div>
-            {/* Paginazione */}
-            {pagination && loginStatus && (
-              <div className="pagination">
-                <button
-                  onClick={() => handlePageChange(pagination.prevPage!)}
-                  disabled={!pagination.hasPrevPage}
-                >
-                  Previous
-                </button>
-
-                {Array.from({ length: pagination.totalPages }, (_, i) => (
-                  // Crea un button per ogni indice dell'array
-                  <button
-                    key={i + 1}
-                    onClick={() => handlePageChange(i + 1)}
-                    className={pagination.page === i + 1 ? 'current-page-button' : ''}
-                    disabled={pagination.page === i + 1}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-                <button
-                  onClick={() => handlePageChange(pagination.nextPage!)}
-                  disabled={!pagination.hasNextPage}
-                >
-                  Next
-                </button>
-              </div>
-            )}
-
             {/* MUI Pagination */}
             {pagination && loginStatus && (
               <Stack spacing={2}
-              // sx={{ color: 'rgba(255, 255, 255, 0.87)' }}
               >
                 <Pagination
-                /* 
-                  sx={{
-                    '& .MuiPaginationItem-root': {
-                      color: 'rgba(255, 255, 255, 0.87)',
-                      '&.Mui-selected': {
-                        backgroundColor: '#535bf2',
-                        color: '#fff',
-                      },
-                      '&:hover': {
-                        backgroundColor: '#646cff',
-                      },
-                    },
-                  }}
-                   */
                   count={pagination.totalPages}
                   page={pagination.page}
-                  onChange={muiPageChange}
+                  onChange={handlePageChange}
                   showFirstButton
                   showLastButton
                 />
