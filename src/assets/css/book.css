@@ -19,7 +19,7 @@
 
 .book {
   cursor: pointer;
-  color: #ffffffde;
+  /* color: #ffffffde; */
 }
 
 .book:hover {
@@ -29,8 +29,4 @@
 .edit-book {
   display: flex;
   flex-direction: column;
-}
-
-.current-page-button {
-  color: #646cff;
 }
