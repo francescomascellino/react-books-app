@@ -11,7 +11,7 @@ const pages = [
   { label: 'Cestino', path: '/trashed' }
 ];
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const userMenu = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const avatarSrc = '';
 
@@ -176,7 +176,7 @@ const Navbar = observer(() => {
         {/* User Menu */}
         <Box sx={{ flexGrow: 0 }}>
 
-          <Tooltip title="Open settings">
+          <Tooltip title="Open User Menu">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <Avatar alt={userName} src={avatarSrc}>
                 {!avatarSrc && userName ? userName.charAt(0).toUpperCase() : ''}
@@ -194,7 +194,7 @@ const Navbar = observer(() => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {settings.map((setting) => (
+            {userMenu.map((setting) => (
               <MenuItem
                 key={setting}
                 onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}

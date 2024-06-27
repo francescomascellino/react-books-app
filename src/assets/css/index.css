@@ -16,12 +16,12 @@
 a {
   font-weight: 500;
   /* color: #90caf9; */
-  color: inherit;
+  color: #ffffffde;
   text-decoration: inherit;
 }
 
 a:visited {
-  color: inherit;
+  color: #ffffffde;
 }
 
 body {
