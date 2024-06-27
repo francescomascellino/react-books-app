@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/auth/useAuthStore';
-
-import '../assets/css/navbar.css';
-import { Avatar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, Button, FormControlLabel, FormGroup, IconButton, Menu, MenuItem, Switch, Toolbar, Tooltip, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
@@ -59,6 +57,11 @@ const Navbar = observer(() => {
     navigate('/');
 
     handleCloseUserMenu()
+  };
+
+  const [checked, setChecked] = useState(true);
+  const handleThemeChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
+    setChecked(event.target.checked);
   };
 
   return (
@@ -161,6 +164,14 @@ const Navbar = observer(() => {
             </Button>
           ))}
         </Box>
+
+        {/* Pulsante di switch del tema */}
+        <FormGroup>
+        <FormControlLabel
+        control={<Switch checked={checked} onChange={handleThemeChange} />}
+        label={checked ? 'Dark' : 'Light'}
+      />
+        </FormGroup>
 
         {/* User Menu */}
         <Box sx={{ flexGrow: 0 }}>
