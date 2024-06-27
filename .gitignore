@@ -30,3 +30,4 @@ src/stores/book/bookStore copy.ts
 src/components/SingleBook copy.tsx
 README.pdf
 src/components/Navbar copy.tsx
+src/assets/css/navbar.css

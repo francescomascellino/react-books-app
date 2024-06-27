@@ -54,16 +54,16 @@ const themeOptions = {
     },
     components: {
       ...createCommonComponentStyles(),
-      MuiLink: {
-        styleOverrides: {
-          root: {
-            color: '#ffffffde',
-            '&:visited': {
-              color: '#ffffffde',
-            },
-          },
-        },
-      },
+      // MuiLink: {
+      //   styleOverrides: {
+      //     root: {
+      //       color: 'black',
+      //       '&:visited': {
+      //         color: 'red',
+      //       },
+      //     },
+      //   },
+      // },
     },
   }),
 };

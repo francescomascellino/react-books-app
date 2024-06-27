@@ -11,16 +11,28 @@ import Pagination from '@mui/material/Pagination';
 // The Stack component manages the layout of its immediate children along the vertical or horizontal axis, with optional spacing and dividers between each child.
 import Stack from '@mui/material/Stack';
 import { Button } from '@mui/material';
+import { runInAction } from 'mobx';
 
 
 // Wrappiamo il componente cob observer()
 const Book = observer(() => {
-  const { books, fetchBooks, setBooks, pagination } = useBookStore();
+  const { books, bookID, fetchBooks, setBooks, setSingleBookId, pagination } = useBookStore();
   const { loginStatus } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
 
-  // console.log(darkTheme);
+  console.log(bookID);
+
+  useEffect(() => {
+      if (bookID !== undefined) {
+        setSingleBookId(null)
+        console.log(bookID);
+      }
+  },
+    // [] MEANS THE EFFECT WILL RUN ONCE AND NEVER AGAIN.
+    // [loginStatus] MEANS THE EFFECT WILL RUN EVERY TIME loginStatus CHANGES.
+    // WRITE NOTHING (EVEN THE BRACLETS) IF YOU WANT THAT THE EFFECT WILL RUN EVERY TIME THERE IS A CHANGE
+    [bookID, setSingleBookId]);
 
   useEffect(() => {
     // Se l'utente è loggato effettua la chiamata API
@@ -44,6 +56,14 @@ const Book = observer(() => {
     // fetchBooks accetta i seguenti parametri: const fetchBooks = async (page: number = 1, pageSize: number = 10)
     // Chiama fetchBooks con il nuovo numero di pagina, lasciando pageSize al suo default di 10
     fetchBooks(newPage);
+
+    if (bookID) {
+      runInAction(
+        () => {
+          navigate(`/books/${bookID}`);
+        }
+      )
+    }
   };
 
   return (

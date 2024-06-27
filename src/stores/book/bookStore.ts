@@ -32,15 +32,18 @@ class BookStore {
   singleBook: Book | null = null;
   pagination: PaginatedBooks | null = null;
   error: Error | AxiosError | null = null;
+  bookID!: string | null;
 
   constructor() {
     makeObservable(this, {
       books: observable,
+      bookID: observable,
       singleBook: observable,
       pagination: observable,
       trashedBooks: observable,
       error: observable,
       setBooks: action,
+      setSingleBookId: action,
       fetchBooks: action,
       fetchSingleBook: action,
       updateBook: action,
@@ -55,6 +58,13 @@ class BookStore {
       this.books = newBooks;
     });
     console.log('Books Set:', this.books);
+  }
+
+  async setSingleBookId(bookID: string | null) {
+    runInAction(() => {
+      this.bookID = bookID;
+    });
+    console.log('Book ID Set:', this.bookID);
   }
 
   fetchBooks = async (page: number = 1, pageSize: number = 10) => {
@@ -99,6 +109,7 @@ class BookStore {
 
       runInAction(() => {
         this.singleBook = response.data;
+        this.bookID = bookID
       });
       console.log('Single Book', this.singleBook);
 

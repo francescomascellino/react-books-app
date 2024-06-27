@@ -6,10 +6,14 @@
 .book-list {
   width: 50%;
   padding: 10px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px grey;
 }
 
 .book-list-wrapper {
   min-height: 300px;
+  border-radius: 5px;
 }
 
 .book-details {
@@ -19,7 +23,6 @@
 
 .book {
   cursor: pointer;
-  /* color: #ffffffde; */
 }
 
 .book:hover {
