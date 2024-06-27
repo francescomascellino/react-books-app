@@ -26,12 +26,14 @@ const router = createBrowserRouter([
   // Root
   {
     path: "/",
-    element: <ThemeProvider theme={darkTheme}>
-    <CssBaseline />
-    <BookProvider>
-      <App />
-    </BookProvider>
-  </ThemeProvider>,
+    element: (
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <BookProvider>
+          <App />
+        </BookProvider>
+      </ThemeProvider>
+    ),
   },
 
   // Book
