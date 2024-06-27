@@ -29,3 +29,4 @@ src/components/EditBook copy.tsx
 src/stores/book/bookStore copy.ts
 src/components/SingleBook copy.tsx
 README.pdf
+src/components/Navbar copy.tsx
