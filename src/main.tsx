@@ -1,5 +1,4 @@
-import React
-  from 'react';
+import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
@@ -17,9 +16,8 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { BookProvider } from './stores/book/BookProvider.tsx';
 import { ThemeProvider } from '@mui/material/styles';
-import darkTheme from './assets/themes/theme.ts';
+import { darkTheme } from './assets/themes/theme';
 import { CssBaseline } from '@mui/material';
-
 
 const router = createBrowserRouter([
 
