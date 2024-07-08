@@ -25,13 +25,13 @@ const AddBook = observer(() => {
       
       await fetchBooks(pagination?.page);
 
-      console.log('id', newBook._id);
+      console.log('From handleSubmit - addBook. New book added. id:', newBook._id);
       
 
       navigate(`/books/${newBook._id}`, { state: { message: 'Libro aggiunto con successo' } });
 
     } catch (error) {
-      console.error('Failed to update book:', error);
+      console.error('Failed to add book:', error);
 
       // Verifica se l'errore è un oggetto AxiosError e contiene dettagli di validazione
       if (axios.isAxiosError(error)) {

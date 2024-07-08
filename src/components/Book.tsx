@@ -16,23 +16,25 @@ import { runInAction } from 'mobx';
 
 // Wrappiamo il componente cob observer()
 const Book = observer(() => {
-  const { books, bookID, fetchBooks, setBooks, setSingleBookId, pagination } = useBookStore();
+  const { books, bookID, fetchBooks, setBooks, 
+    // setSingleBookId, 
+    pagination } = useBookStore();
   const { loginStatus } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
 
-  console.log(bookID);
+  console.log('From Book component. Chechking if there is a Book id: ',bookID);
 
-  useEffect(() => {
-      if (bookID !== undefined) {
-        setSingleBookId(null)
-        console.log(bookID);
-      }
-  },
+  // useEffect(() => {
+      // if (bookID !== undefined || null) {
+        // setSingleBookId(null)
+        // console.log(bookID);
+      // }
+  // },
     // [] MEANS THE EFFECT WILL RUN ONCE AND NEVER AGAIN.
     // [loginStatus] MEANS THE EFFECT WILL RUN EVERY TIME loginStatus CHANGES.
     // WRITE NOTHING (EVEN THE BRACLETS) IF YOU WANT THAT THE EFFECT WILL RUN EVERY TIME THERE IS A CHANGE
-    [bookID, setSingleBookId]);
+    // [bookID, setSingleBookId]);
 
   useEffect(() => {
     // Se l'utente è loggato effettua la chiamata API
@@ -41,7 +43,7 @@ const Book = observer(() => {
     } else {
       // Se l'utente non è loggato svuota la lista dei libri
       // setBooks([]);
-      console.log("User must be logged in");
+      console.log("From Book component UseEffect: User must be logged in");
     }
 
   },

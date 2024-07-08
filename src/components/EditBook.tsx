@@ -20,7 +20,7 @@ const EditBook = observer(() => {
   useEffect(() => {
     if (bookID) {
       fetchSingleBook(bookID);
-      console.log(`Book with ID ${bookID}`, singleBook);
+      console.log(`From EditBook Component useEffect. Fetching book by id. Book with ID ${bookID}`, singleBook);
 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,7 +40,7 @@ const EditBook = observer(() => {
     try {
       if (bookID) {
         await updateBook(bookID, { title, author, ISBN });
-        console.log('Book updated successfully');
+        console.log('From EditBook Component. Book updated successfully');
         await fetchBooks(pagination?.page)
         // Naviga alla pagina del singolo libro con un messaggio di successo
         navigate(`/books/${bookID}`, { state: { message: 'Libro aggiornato con successo' } });

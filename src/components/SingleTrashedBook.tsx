@@ -15,7 +15,7 @@ const SingleTrashedBook = observer(() => {
 
   useEffect(() => {
     if (bookID) {
-      console.log(`BookID Changed ${bookID}`);
+      console.log(`From SingleTrashedBook Component useEffect. BookID Changed to: ${bookID}`, 'Fectching Single Soft-Deleted Book:');
       fetchSingleSoftDeletedBook(bookID);
     }
   }, [bookID, fetchSingleSoftDeletedBook]);

@@ -23,9 +23,10 @@ const Book = observer(() => {
   useEffect(() => {
     // Se l'utente è loggato effettua la chiamata API
     if (loginStatus) {
+      console.log('From TrashedBooks Component. Fetching Trashed Books');      
       fetchTrashed();
     } else {
-      console.log("User must be logged in");
+      console.log("From TrashedBooks Component. User must be logged in");
     }
 
   },

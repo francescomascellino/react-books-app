@@ -32,7 +32,7 @@ class BookStore {
   singleBook: Book | null = null;
   pagination: PaginatedBooks | null = null;
   error: Error | AxiosError | null = null;
-  bookID!: string | null;
+  bookID: string | null | undefined = null;
 
   constructor() {
     makeObservable(this, {
@@ -57,14 +57,19 @@ class BookStore {
     runInAction(() => {
       this.books = newBooks;
     });
-    console.log('Books Set:', this.books);
+    console.log('From BookStore SetBooks. Books Set:', this.books);
   }
 
-  async setSingleBookId(bookID: string | null) {
+  async setSingleBookId(bookID: string | null | undefined) {
     runInAction(() => {
+      if (bookID !== undefined || null) {
+        console.log('From Bookstore setSingleBookId. Setting Book id to: ', bookID);
+
+        this.bookID = bookID;
+      }
       this.bookID = bookID;
     });
-    console.log('Book ID Set:', this.bookID);
+    console.log('From BookStore setSingleBookId. Book ID Set:', this.bookID);
   }
 
   fetchBooks = async (page: number = 1, pageSize: number = 10) => {
@@ -86,7 +91,7 @@ class BookStore {
         this.pagination = response.data;
       });
     } catch (error) {
-      console.error('Failed to fetch books:', error);
+      console.error('From BookStore. Failed to fetch books:', error);
     }
   };
 
@@ -111,7 +116,7 @@ class BookStore {
         this.singleBook = response.data;
         this.bookID = bookID
       });
-      console.log('Single Book', this.singleBook);
+      console.log('From BookStore fetchSingleBook. Single Book', this.singleBook);
 
     } catch (error) {
       runInAction(() => {
@@ -121,7 +126,7 @@ class BookStore {
           this.error = new Error('Unknown error');
         }
       });
-      console.error('Failed to fetch single book:', error);
+      console.error('From BookStore. Failed to fetch single book:', error);
     }
   };
 
@@ -170,7 +175,7 @@ class BookStore {
       });
 
       const newBook = response.data;
-      console.log('Book added:', newBook);
+      console.log('Fom BookStore addBook. Book added:', newBook);
 
       runInAction(() => {
         this.books.push(newBook);
@@ -200,7 +205,10 @@ class BookStore {
       // Fetch tutti i libri dopo il soft delete
       await this.fetchBooks();
 
-      console.log('Book soft deleted with ID:', bookID);
+      console.log('Fom BookStore softDeleteBook. setting BookID to null.');
+      this.setSingleBookId(null)
+
+      console.log('Fom BookStore softDeleteBook. Book soft deleted with ID:', bookID);
     } catch (error) {
       console.error('Failed to soft delete book:', error);
       throw error; // Rilancia l'errore per gestirlo nel componente
@@ -209,7 +217,6 @@ class BookStore {
 
   fetchTrashed = async (
     page: number = 1, pageSize: number = 10
-
   ) => {
     try {
       const token = localStorage.getItem('token');
@@ -226,8 +233,8 @@ class BookStore {
 
       runInAction(() => {
         this.trashedBooks = response.data.docs;
-        console.log('trash',this.trashedBooks);
-        
+        console.log('From BookStore fetchTrashed. Trashed Books:', this.trashedBooks);
+
         this.pagination = response.data;
       });
     } catch (error) {
@@ -255,7 +262,7 @@ class BookStore {
       runInAction(() => {
         this.singleBook = response.data;
       });
-      console.log('Single Trashed Book', this.singleBook);
+      console.log('From BookStore fetchSingleSoftDeletedBook. Single Trashed Book', this.singleBook);
 
     } catch (error) {
       runInAction(() => {
@@ -285,7 +292,7 @@ class BookStore {
       // Fetch tutti i libri dopo il soft delete
       await this.fetchTrashed();
 
-      console.log('Book restored with ID:', bookID);
+      console.log('From BookStore restoreBook. Book restored with ID:', bookID);
     } catch (error) {
       console.error('Failed to restore book:', error);
       throw error; // Rilancia l'errore per gestirlo nel componente
@@ -308,7 +315,7 @@ class BookStore {
       // Fetch tutti i libri dopo il soft delete
       await this.fetchTrashed();
 
-      console.log('Book deleted with ID:', bookID);
+      console.log('From BookStore deleteBook. Book deleted with ID:', bookID);
     } catch (error) {
       console.error('Failed to delete book:', error);
       throw error; // Rilancia l'errore per gestirlo nel componente

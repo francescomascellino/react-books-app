@@ -15,7 +15,7 @@ const SingleBook = observer(() => {
 
   useEffect(() => {
     if (bookID) {
-      console.log(`BookID Changed ${bookID}`);
+      console.log(`From SingleBook Component useEffect. BookID Changed to: ${bookID}`, 'Fectching Single Book:');
       fetchSingleBook(bookID);
     }
   }, [bookID, fetchSingleBook]);
