@@ -144,8 +144,10 @@ class BookStore {
       });
 
       runInAction(() => {
+        // Cerca l'indice del libro con l'ID del libro aggiornato nell'array di libri
         const index = this.books.findIndex(book => book._id === bookID);
         if (index > -1) {
+          // aggiorna i dati del libro all'indice trovato con i dfati aggiornati
           this.books[index] = response.data;
         }
       });
