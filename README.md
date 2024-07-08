@@ -134,7 +134,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export default AuthContext;
 ```
 
-### Creiamo il Provider incui useremoil Contesto creato
+### Creiamo il Provider in cui useremo il Contesto creato
 
 ***AuthProvider.tsx***
 ```ts
@@ -627,7 +627,7 @@ import { useState } from 'react';
 import axios from 'axios';
 
 interface Book {
-  // Codicw
+  // Codice
 }
 
 interface PaginatedBooks {
