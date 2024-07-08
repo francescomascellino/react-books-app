@@ -6,7 +6,6 @@ import {
   Link, Outlet, useLocation,
   useNavigate
 } from 'react-router-dom';
-// import Navbar from './Navbar';
 import '../assets/css/book.css'
 
 import Pagination from '@mui/material/Pagination';

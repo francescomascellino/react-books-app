@@ -26,10 +26,8 @@ const Book = observer(() => {
   console.log('From Book component. Chechking if there is a Book id: ',bookID);
 
   // useEffect(() => {
-      // if (bookID !== undefined || null) {
         // setSingleBookId(null)
         // console.log(bookID);
-      // }
   // },
     // [] MEANS THE EFFECT WILL RUN ONCE AND NEVER AGAIN.
     // [loginStatus] MEANS THE EFFECT WILL RUN EVERY TIME loginStatus CHANGES.
