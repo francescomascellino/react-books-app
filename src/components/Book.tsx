@@ -16,32 +16,32 @@ import { runInAction } from 'mobx';
 
 // Wrappiamo il componente cob observer()
 const Book = observer(() => {
-  const { books, bookID, fetchBooks, setBooks, 
+  const { books, bookID, fetchBooks, setBooks,
     // setSingleBookId, 
     pagination } = useBookStore();
   const { loginStatus } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
 
-  console.log('From Book component. Chechking if there is a Book id: ',bookID);
+  console.log('From Book component. Chechking if there is a Book id: ', bookID);
 
-// SERVE UN MODO PER FAR SI CHE UNA VOLTA RIENTRATI NEL COMPONENTE IL BOOKID SI VUOTI. UNO USE EFFECT NON FUNZIONA
-// QUESTA OPERAZIONE NON PUO' ESSERE FATTA IN BOOKSTORE-FETCHBOOKS PERCHE' SERVE CHE IL LIBRO SELEZIONATO RIMANGA NEI DETTAGLI CAMBIANDO PAGINA
-/*   
-  useEffect(() => {
-    if (bookID !== null || undefined) {
-      console.log('you are in the use effect that shoul reset the book id');
-      
-      setSingleBookId(null)
-        console.log(bookID);
-    }
+  // SERVE UN MODO PER FAR SI CHE UNA VOLTA RIENTRATI NEL COMPONENTE IL BOOKID SI VUOTI. UNO USE EFFECT NON FUNZIONA
+  // QUESTA OPERAZIONE NON PUO' ESSERE FATTA IN BOOKSTORE-FETCHBOOKS PERCHE' SERVE CHE IL LIBRO SELEZIONATO RIMANGA NEI DETTAGLI CAMBIANDO PAGINA
+  /*   
+    useEffect(() => {
+      if (bookID !== null || undefined) {
+        console.log('you are in the use effect that shoul reset the book id');
         
-  },
-    // [] MEANS THE EFFECT WILL RUN ONCE AND NEVER AGAIN.
-    // [loginStatus] MEANS THE EFFECT WILL RUN EVERY TIME loginStatus CHANGES.
-    // WRITE NOTHING (EVEN THE BRACLETS) IF YOU WANT THAT THE EFFECT WILL RUN EVERY TIME THERE IS A CHANGE
-    [bookID, setSingleBookId]); 
-*/
+        await setSingleBookId(null)
+          console.log(bookID);
+      }
+          
+    },
+      // [] MEANS THE EFFECT WILL RUN ONCE AND NEVER AGAIN.
+      // [loginStatus] MEANS THE EFFECT WILL RUN EVERY TIME loginStatus CHANGES.
+      // WRITE NOTHING (EVEN THE BRACLETS) IF YOU WANT THAT THE EFFECT WILL RUN EVERY TIME THERE IS A CHANGE
+      [bookID, setSingleBookId]); 
+  */
 
   useEffect(() => {
     // Se l'utente è loggato effettua la chiamata API
