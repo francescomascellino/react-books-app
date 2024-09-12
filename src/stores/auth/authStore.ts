@@ -1,5 +1,5 @@
 import { action, makeObservable, observable } from "mobx";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 interface User {
   _id: string;
@@ -44,14 +44,23 @@ class AuthStore {
       console.log('response', response);
 
       return response.data;
+
     } catch (error) {
-      console.log('error');
-      
-      console.error(error);
-      
-      return { _id: '', name: '', surname: '', username: '', password: '', role: 'user' }; 
+
+      console.error(`Errore durante la creazione dell'utente: ${error}`);
+  
+      if (axios.isAxiosError(error)) {
+
+        const axiosError = error as AxiosError<{ message: string[] }>;
+        if (axiosError.response?.data && axiosError.response.data.message) {
+          throw new Error(`Registrazione dell'Utente fallita: ${axiosError.response.data.message}`);
+        }
+      }
+  
+      throw new Error(`Errore durante la creazione dell'utente.`);
+
     }
-  }
+  };
 
   async login(username: string, password: string) {
     try {

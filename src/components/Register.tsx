@@ -23,24 +23,27 @@ const Register = observer(() => {
 
       const newUser = await register({ name, surname, username, password })
 
-      console.log('new user:', newUser);
-
+      // Se la registrazione ha successo, esegue il login
+    if (newUser) {
+      console.log('New User:', newUser);
+      
       await login(username, password);
 
       navigate(`/`, { state: { message: 'Utente creato con successo' } });
+    }
 
     } catch (error) {
-      console.error('Failed to create new user:', error);
+      console.error(`Errore durante la creazione dell'utente:`, error);
 
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<{ message: string[] }>;
         if (axiosError.response?.data && axiosError.response.data.message) {
           const validationError = axiosError.response.data.message;
           console.log(validationError);
-          setValidationError(`Errore durante la creazione dell'utente: ${validationError}`);
+          setValidationError(`${validationError}`);
         }
       } else {
-        setValidationError(`Errore durante la creazione dell'utente: ${error}`);
+        setValidationError(`${error}`);
       }
     }
   };
