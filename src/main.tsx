@@ -16,6 +16,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { BookProvider } from './stores/book/BookProvider.tsx';
+import NotFound from './components/NotFound.tsx';
+import Register from './components/Register.tsx';
 
 const router = createBrowserRouter([
 
@@ -23,9 +25,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-        <BookProvider>
-          <App />
-        </BookProvider>
+      <BookProvider>
+        <App />
+      </BookProvider>
     ),
     children: [
 
@@ -34,14 +36,22 @@ const router = createBrowserRouter([
         element: <Login /> // Renderizza "Logim" per il percorso "/"
       },
 
+      // Register
+      {
+        path: "/register",
+        element: (
+            <Register />
+        ),
+      },
+
       // Book
       {
         path: "/books",
         element: (
           // Avvolgiamo le rotte nel contesto
-            <BookProvider>
-              <Book />
-            </BookProvider>
+          <BookProvider>
+            <Book />
+          </BookProvider>
         ),
         children: [
           {
@@ -75,9 +85,9 @@ const router = createBrowserRouter([
       {
         path: "/trashed",
         element: (
-            <BookProvider>
-              <TrashedBooks />
-            </BookProvider>
+          <BookProvider>
+            <TrashedBooks />
+          </BookProvider>
         ),
         children: [
           {
@@ -90,64 +100,16 @@ const router = createBrowserRouter([
           },
         ],
       },
+
+      // NotFound
+      {
+        path: "/notfound",
+        element: (
+            <NotFound />
+        ),
+      },
+
     ]
-  },
-
-  // Book
-  {
-    path: "/books",
-    element: (
-      // Avvolgiamo le rotte nel contesto
-        <BookProvider>
-          <Book />
-        </BookProvider>
-    ),
-    children: [
-      {
-        path: ":bookID",
-        element: (
-          <BookProvider>
-            <SingleBook />
-          </BookProvider>
-        ),
-      },
-      {
-        path: ":bookID/edit",
-        element: (
-          <BookProvider>
-            <EditBook />
-          </BookProvider>
-        ),
-      },
-      {
-        path: "add",
-        element: (
-          <BookProvider>
-            <AddBook />
-          </BookProvider>
-        ),
-      },
-    ],
-  },
-
-  // Trashed
-  {
-    path: "/trashed",
-    element: (
-        <BookProvider>
-          <TrashedBooks />
-        </BookProvider>
-    ),
-    children: [
-      {
-        path: ":bookID",
-        element: (
-          <BookProvider>
-            <SingleTrashedBook />
-          </BookProvider>
-        ),
-      },
-    ],
   },
 
 ]);

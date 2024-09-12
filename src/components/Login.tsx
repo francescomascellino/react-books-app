@@ -3,12 +3,15 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import { observer } from 'mobx-react-lite';
 import { Button } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
 
 const Login = observer(() => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const { login, logout, setLoginStatus, loginStatus } = useAuthStore();
 
@@ -55,6 +58,10 @@ const Login = observer(() => {
       console.log(`Can login Again? ${loginStatus}`);
     }
 
+    if (location.state?.message) {
+      navigate('/', { state: { message: null } });
+    }
+
     console.log('Logout successful');
 
   }
@@ -62,7 +69,15 @@ const Login = observer(() => {
   return (
     <>
       <h1>Login.tsx</h1>
-      <hr />
+
+      {/* Messaggio di stato */}
+      <div style={{ height: '70px' }}>
+        {location.state?.message &&
+          <div className="card">
+            <p style={{ color: 'green' }}>{location.state.message}</p>
+          </div>
+        }
+      </div>
       <div>
 
         <form action="" onSubmit={handleLogin}>

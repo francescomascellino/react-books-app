@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/auth/useAuthStore';
 import { Avatar, Box, Button, FormControlLabel, FormGroup, IconButton, Menu, MenuItem, Switch, Toolbar, Tooltip, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -16,13 +16,21 @@ const pages = [
   { label: 'Cestino', path: '/trashed' }
 ];
 
-const userMenu = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const userMenu = [
+  { label: 'Profile', route: '/notfound', needsLogin: true },
+  { label: 'Account', route: '/notfound', needsLogin: true },
+  { label: 'Dashboard', route: '/notfound', needsLogin: true },
+  { label: 'Register', route: '/register', needsLogin: false },
+  { label: 'Login', route: '/', needsLogin: false },
+  { label: 'Logout', route: '/', needsLogin: true, isLogout: true },
+];
 
 const avatarSrc = '';
 
 const Navbar: React.FC<NavbarProps> = observer(({ themeMode, handleThemeChange }) => {
   const { logout, setLoginStatus, loginStatus } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
   // const [error, setError] = useState<string | null>(null);
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -58,8 +66,17 @@ const Navbar: React.FC<NavbarProps> = observer(({ themeMode, handleThemeChange }
       console.log(`Can login Again? ${loginStatus}`);
     }
 
-    console.log('Logout successful');
-    navigate('/');
+    console.log('location message before reset:', location.state);
+
+    if (location.state?.message) {
+      navigate(location.pathname, { state: { ...location.state, message: null } });
+    }
+
+    if (location.state?.message) {
+      navigate('/', { state: { message: null } });
+    } else {
+      navigate('/');
+    }
 
     handleCloseUserMenu()
   };
@@ -198,19 +215,38 @@ const Navbar: React.FC<NavbarProps> = observer(({ themeMode, handleThemeChange }
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {userMenu.map((setting) => (
+
+            {userMenu.filter(setting => {
+              // Il filtro  esclude 'Login' e 'Register' se l'utente è loggato, e 'Logout' se l'utente è loggato
+
+              if (loginStatus && (setting.label === 'Login' || setting.label === 'Register') || (setting.label === 'Logout' && !loginStatus)) {
+
+
+                return false; // Esclude queste voci se l'utente è loggato
+              }
+              return true;
+            }).map((setting) => (
               <MenuItem
-                key={setting}
-                onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}
-                disabled={setting !== 'Logout' && setting !== 'Login'}
-                component={setting === 'Logout' && !loginStatus ? Link : 'div'}
-                to={setting === 'Logout' && !loginStatus ? '/' : undefined}
+                key={setting.label}
+
+                // Se il ciclo sta compilando un'opzione "islogout" allora assegna al click la funzione di logout
+                onClick={setting.isLogout ? handleLogout : handleCloseUserMenu}
+
+                // La voce del menù è disabled se l'opzione attuale "needsLogin" e l'utente non è loggato
+                disabled={(setting.needsLogin && !loginStatus)}
+
+                component={Link}
+
+                // Link indirizza verso la route indicata nell'oggetto newUserMenu
+                to={setting.route}
               >
                 <Typography textAlign="center">
-                  {setting === 'Logout' && !loginStatus ? 'Login' : setting}
+                  {/* Mostra l'etichetta dell'opzione ciclata */}
+                  {setting.label}
                 </Typography>
               </MenuItem>
             ))}
+
           </Menu>
 
         </Box>

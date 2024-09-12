@@ -57,7 +57,7 @@ button {
   box-sizing: border-box;
 }
 
-#username,
+#name, #surname, #username,
 #password {
   width: 20%;
 }

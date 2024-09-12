@@ -1,12 +1,20 @@
 import { action, makeObservable, observable } from "mobx";
 import axios from 'axios';
 
+interface User {
+  _id: string;
+  name: string;
+  surname: string;
+  username: string;
+  password: string;
+  role: string;
+}
+
 class AuthStore {
   token: string | null = localStorage.getItem('token') || null;
   userName: string | null = localStorage.getItem('userName') || null;
   error: string | null = null;
   loginStatus: boolean = !!localStorage.getItem('token'); // Imposta loginStatus su true se c'è un token in localStorage
-
   constructor() {
     makeObservable(
       this,
@@ -24,6 +32,25 @@ class AuthStore {
   setLoginStatus(value: boolean) {
     this.loginStatus = value;
     return this.loginStatus
+  }
+
+  register = async (user: Partial<User>): Promise<User> => {
+    try {
+      user.role = 'user';
+      console.log('user',user);
+
+      const response = await axios.post<User>('http://localhost:3000/user/', user);
+
+      console.log('response', response);
+
+      return response.data;
+    } catch (error) {
+      console.log('error');
+      
+      console.error(error);
+      
+      return { _id: '', name: '', surname: '', username: '', password: '', role: 'user' }; 
+    }
   }
 
   async login(username: string, password: string) {
