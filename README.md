@@ -809,3 +809,44 @@ Modifichiamo il metodo
     }
   };
 ```
+
+## MUI DataGrid
+
+```ts
+// ALTRI IMPORT
+
+// IMPORTIAMO DATAGRID E IL TIPO DI DEFINIZIONE DELLE COLONNE
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+
+const Book = observer(() => {
+
+  const { books, bookID, fetchBooks, setBooks, pagination } = useBookStore();
+
+  // Definiamo le colonne
+  const columns: GridColDef[] = [
+    { field: 'title', headerName: 'Titolo', headerAlign: 'center',  flex: 2 },
+    { field: 'author', headerName: 'Autore', headerAlign: 'center', flex: 2 },
+    { field: 'ISBN', headerName: 'ISBN', headerAlign: 'center', align: 'center', flex: 1 },
+    { field: 'loaned_to', headerName: 'Affittato a', headerAlign: 'center', align: 'center', flex: 1 }
+  ];
+
+  // Mappiamo i dati nelle righe
+  const rows = books.map((book) => ({
+    id: book._id,
+    title: book.title,
+    author: book.author,
+    ISBN: book.ISBN,
+    loaned_to: book.loaned_to?.name || 'Disponibile'
+  }));
+
+  return (
+    <>
+    // MARKUP
+      <div>
+        // UTILIZZIAMO IL COMPONENTE ASSEGNANDO I VALORI DI RIGHE E COLONNE
+        <DataGrid rows={rows} columns={columns}/>
+      </div>
+    </>
+  )
+});
+```

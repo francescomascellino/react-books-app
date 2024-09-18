@@ -63,7 +63,7 @@ const SingleBook = observer(() => {
                   <h2>{singleBook.title}</h2>
                   <p>Autore: {singleBook.author}</p>
                   <p>ISBN: {singleBook.ISBN}</p>
-                  {singleBook.loaned_to && <p>Affittato a {singleBook.loaned_to.name}</p>}
+                  {singleBook.loaned_to && singleBook.loaned_to.name ? <p>Affittato a {singleBook.loaned_to.name}</p> : <p>Libro disponibile</p>}
                 </>
               ) : (
                 <p>Loading...</p>

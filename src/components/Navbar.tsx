@@ -20,6 +20,7 @@ const userMenu = [
   { label: 'Profile', route: '/notfound', needsLogin: true },
   { label: 'Account', route: '/notfound', needsLogin: true },
   { label: 'Dashboard', route: '/notfound', needsLogin: true },
+  { label: 'Datagrid', route: '/datagrid', needsLogin: true },
   { label: 'Register', route: '/register', needsLogin: false },
   { label: 'Login', route: '/', needsLogin: false },
   { label: 'Logout', route: '/', needsLogin: true, isLogout: true },

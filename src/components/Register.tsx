@@ -4,6 +4,7 @@ import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css';
 import axios, { AxiosError } from 'axios';
 import { observer } from 'mobx-react-lite';
+import { Button } from '@mui/material';
 
 const Register = observer(() => {
   const { login, register } = useAuthStore();0
@@ -103,9 +104,11 @@ const Register = observer(() => {
             </div>
 
             <div>
-              <button type="submit">Conferma</button>
-              <Link to="/"><button>Annulla</button></Link>
+              <Button variant="contained" size="medium" type='submit'>Conferma</Button>
+
+              <Button variant="contained" size="medium" color='error' component={Link} to={`/`}>Annulla</Button>
             </div>
+
           </form>
           {validationError && <p style={{ color: 'red' }}>{validationError}</p>}
         </>

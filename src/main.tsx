@@ -10,14 +10,15 @@ import AddBook from './components/AddBook.tsx';
 import SingleBook from './components/SingleBook.tsx';
 import TrashedBooks from './components/TrashedBooks.tsx';
 import SingleTrashedBook from './components/SingleTrashedBook.tsx';
+import DataGridPage from './components/DataGridPage.tsx';
+import Register from './components/Register.tsx';
+import NotFound from './components/NotFound.tsx';
 import './assets/css/index.css';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { BookProvider } from './stores/book/BookProvider.tsx';
-import NotFound from './components/NotFound.tsx';
-import Register from './components/Register.tsx';
 
 const router = createBrowserRouter([
 
@@ -99,6 +100,14 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+
+      // DataGrif
+      {
+        path: "/datagrid",
+        element: (
+            <DataGridPage />
+        ),
       },
 
       // NotFound

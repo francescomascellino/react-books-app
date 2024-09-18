@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useBookStore } from '../stores/book/useBookStore';
 import { useAuthStore } from '../stores/auth/useAuthStore';
-// import Navbar from './Navbar';
+
 import '../assets/css/book.css'
 
 import Pagination from '@mui/material/Pagination';
@@ -12,7 +12,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { Button } from '@mui/material';
 import { runInAction } from 'mobx';
-
+import BookGrid from './BookGrid';
 
 // Wrappiamo il componente cob observer()
 const Book = observer(() => {
@@ -139,6 +139,10 @@ const Book = observer(() => {
           <Outlet />
         </div>
 
+      </div>
+
+      <div>
+        <BookGrid />
       </div>
     </>
   )
