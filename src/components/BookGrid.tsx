@@ -112,19 +112,24 @@ const BookGrid = observer(() => {
 
           </FormControl>
 
+          {/* Assegna labels a componenti switch, radio e checkboxes */}
           <FormControlLabel
             control={
               <Switch
+                size="small"
+                color="warning"
                 checked={loansToggle}
                 onChange={handleLoanedToggleChange}
               />
             }
 
             label={
-              <Typography align="left" sx={{ fontSize: 'small' }}>
+              // ASeegna stile al font della label e margine sx dallo switch
+              <Typography align="left" sx={{ fontSize: 'small', ml: 2 }}>
                 Mostra assegnati</Typography>
             }
 
+            // Margine SX SWITCH
             sx={{ ml: 2 }}
           />
 
