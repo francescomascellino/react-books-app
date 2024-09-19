@@ -850,3 +850,72 @@ const Book = observer(() => {
   )
 });
 ```
+
+paginationModel è un oggetto che contiene la pagina iniziale e la dimensione di default della pagina. Viene inizializzato con i valori ***{ page: 0, pageSize: 100 }***.
+
+E' possibile inizializzarlo con dei valori personalizzati usando la proprietà ***initialState***.
+```ts
+<DataGrid
+  rows={rows}
+  columns={columns}
+  initialState={{
+    pagination: {
+      // STATO INIZIALE paginationModel
+      paginationModel: { pageSize: 10, page: 0 },
+      }, 
+  }}
+  pageSizeOptions={[10, 20, 30, 40]} // OPZIONI MENU' TENDINA PAGESIZE (DEFAULT [25, 50, 100])
+  autoHeight // ALTEZZA AUTOMATICA DELLA TABELLA
+/>
+```
+
+E' possibile anche controllare il paginationModel tramite useState
+
+```ts
+const [paginationModel, setPaginationModel] = useState({
+    pageSize: 10,
+    page: 0,
+  });
+
+  return (
+    <>
+      <div>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[10, 20, 30, 40]}
+          autoHeight
+        />
+      </div>
+    </>
+  )
+});
+```
+
+Importando il tipo GridCellParams è possibile leggere i valori delle celle
+
+```ts
+import { GridColDef, DataGrid, GridCellParams } from "@mui/x-data-grid";
+
+const handleCellClick = (params: GridCellParams) => {
+  console.log(params.value);
+};
+
+<DataGrid
+  rows={rows}
+  columns={columns}
+  initialState={{
+  pagination: {
+    paginationModel: { pageSize: 10, page: 0 },
+    },
+  }}
+  pageSizeOptions={[10, 20, 30, 40]}
+  autoHeight
+  onCellClick={handleCellClick}
+/>
+```
+
+## MUI FORM SELECT
+
