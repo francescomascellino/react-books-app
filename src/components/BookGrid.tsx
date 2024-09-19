@@ -25,7 +25,7 @@ const BookGrid = observer(() => {
 
     [loginStatus, fetchBooks]);
 
-  const [author, setAuthor] = useState('')
+  const [author, setAuthor] = useState('');
 
   useEffect(
     () => {

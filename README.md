@@ -811,7 +811,7 @@ Modifichiamo il metodo
 ```
 
 ## MUI DataGrid
-
+***src\components\BookGrid.tsx***
 ```ts
 // ALTRI IMPORT
 
@@ -919,3 +919,74 @@ const handleCellClick = (params: GridCellParams) => {
 
 ## MUI FORM SELECT
 
+E' possibile mappare normalmente i Select di MUI per popolarne i campi
+
+In questo caso abbiamo creato una funzione che accetta due parametri: un array di oggetti e una prop in modo che la funzione possa estrarre dall'array di oggetti gli elementi che possiedono la prop richiesta. Questo ci permette di poter usare la stessa funzione per filtrare proprietà diverse (autore, titolo, ecc in questo esempio).
+
+```ts
+// T è il TYpe generico di TS. K è la chiave di T, che quindi può essere solo un oggetto
+// T[K][] = l'array risultante sarà di tipo T[K]
+const filterParameter = <T extends object, K extends keyof T>(prop: K, objArr: T[]): T[K][] => {
+  return [...new Set(objArr.map(obj => obj[prop]))].sort();
+};
+```
+
+```ts
+<FormControl fullWidth>
+  <InputLabel id="author-select">Autore</InputLabel>
+
+    <Select
+      labelId="author-select"
+      id="author-filter"
+      value={author}
+      label="Autore"
+      onChange={(e) => setAuthor(e.target.value)}
+    >
+      <MenuItem value={''}>Tutti i Libri</MenuItem>
+
+      {filterParameter('author', books).map((value, i) => (
+        <MenuItem key={i} value={value}>{value}</MenuItem>
+      ))}
+
+      </Select>
+
+</FormControl>
+```
+
+Il select quando usato tramite useState cambia il valore di ***author***.
+```ts
+const [author, setAuthor] = useState('');
+```
+
+Una volta che il valore di ***author*** cambia, ***useEffect*** filtrerà i libri tramite Autore
+```ts
+useEffect(
+  () => {
+    if (author) {
+      console.log(`Current Author is ${author}`);
+
+      const filteredBooks = books.filter((book) => book.author == author)
+
+      console.log(`Filtered Books: ${JSON.stringify(filteredBooks, null, 2)}`);
+
+    }
+  }, [author, books]);
+```
+
+Aggiungiamo una condizione che permetta però di usare l'array di libri originale se non è stato selezionato alcun Autore.
+```ts
+const filteredBooks = author
+  ? books.filter((book) => book.author === author)
+  : books;
+```
+
+In questo modo, mappando adesso ***filteredBooks*** e non ***books*** nella constante ***rows*** abbiamo la possibilità di popolare dinamicamente la griglia a seconda del filtro.
+```ts
+const rows = filteredBooks.map((book) => ({
+  id: book._id,
+  title: book.title,
+  author: book.author,
+  ISBN: book.ISBN,
+  loaned_to: book.loaned_to?.name || 'Disponibile'
+}));
+```
