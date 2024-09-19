@@ -12,7 +12,6 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { Button } from '@mui/material';
 import { runInAction } from 'mobx';
-import BookGrid from './BookGrid';
 
 // Wrappiamo il componente cob observer()
 const Book = observer(() => {
@@ -139,10 +138,6 @@ const Book = observer(() => {
           <Outlet />
         </div>
 
-      </div>
-
-      <div>
-        <BookGrid />
       </div>
     </>
   )
