@@ -990,3 +990,51 @@ const rows = filteredBooks.map((book) => ({
   loaned_to: book.loaned_to?.name || 'Disponibile'
 }));
 ```
+
+## MUI SEARCHBAR
+
+Creiamo uno useState che gestica la query di ricerca
+```ts
+const [searchTitle, setSearchTitle] = useState('');
+```
+
+Importiamo e creiamo la Searchbar usando il componente TetField di MUI.
+Assegnamo alla proprietà ***onInput*** la lettura dell'evento e useState.
+In questo caso è stato necessario specificare a TS che l'evento era un ***HTMLInputElement***.
+```ts
+<TextField
+  d="search-title"
+  onInput={(e) => {
+    setSearchTitle((e.target as HTMLInputElement).value);
+  }}
+  label="Cerca Titolo"
+  placeholder="Cerca..."
+  size="small"
+  fullWidth
+/>
+```
+
+Aggiungiamo alla funzione di filtro una ulteriore condizione: 
+- Se serchTitle è vuoto, filtra senza nessuna condizione (da tutti i risultati)
+oppure
+- filtra i libri che contengono ***searchTitle*** (minuscolo e privo di spazi) nel titolo
+```ts
+const rows = filteredBooks
+
+  // Filtro sui libri assegnati tramite toggle
+  .filter((book) => !loansToggle || (loansToggle && book.loaned_to?.name))
+
+  // Filtro sui libri che contengono la query di ricerca
+  .filter((book) => !searchTitle || book.title.toLowerCase().includes(searchTitle.trim().toLowerCase()))
+
+  .map((book) => (
+      {
+        id: book._id,
+        title: book.title,
+        author: book.author,
+        ISBN: book.ISBN,
+        loaned_to: book.loaned_to?.name || 'Disponibile'
+      }
+    )
+  );
+```

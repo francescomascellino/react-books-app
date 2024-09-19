@@ -88,7 +88,7 @@ const Navbar: React.FC<NavbarProps> = observer(({ themeMode, handleThemeChange }
 
   return (
     <>
-      <Toolbar disableGutters>
+      <Toolbar disableGutters sx={{px: 1}}>
 
         {/* Nav Elements Mobile */}
         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
