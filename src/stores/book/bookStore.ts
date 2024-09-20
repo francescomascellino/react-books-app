@@ -2,7 +2,7 @@
 import axios, { AxiosError } from 'axios';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 
-interface Book {
+export interface Book {
   _id: string;
   title: string;
   ISBN: string;
@@ -160,6 +160,7 @@ class BookStore {
         }
       });
       console.error('Failed to update book:', error);
+      throw error;
     }
   };
 

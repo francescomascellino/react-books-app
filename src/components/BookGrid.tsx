@@ -1,14 +1,16 @@
 import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, TextField, Typography } from "@mui/material";
-import { GridColDef, DataGrid, GridCellParams, GridToolbar } from "@mui/x-data-grid";
+import { GridColDef, DataGrid, GridCellParams, GridToolbar, GridRowModel } from "@mui/x-data-grid";
 import SearchIcon from '@mui/icons-material/Search';
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../stores/auth/useAuthStore";
 import { useBookStore } from "../stores/book/useBookStore";
+import { Book } from "../stores/book/bookStore";
+import axios, { AxiosError } from "axios";
 
 const BookGrid = observer(() => {
 
-  const { books, fetchBooks
+  const { books, updateBook, fetchBooks
   } = useBookStore();
   const { loginStatus } = useAuthStore();
 
@@ -45,7 +47,7 @@ const BookGrid = observer(() => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'title', headerName: 'Titolo', headerAlign: 'center', flex: 2 },
+    { field: 'title', headerName: 'Titolo', headerAlign: 'center', flex: 2, editable: true },
     { field: 'author', headerName: 'Autore', headerAlign: 'center', flex: 2 },
     { field: 'ISBN', headerName: 'ISBN', headerAlign: 'center', align: 'center', flex: 1 },
     { field: 'loaned_to', headerName: 'Affittato a', headerAlign: 'center', align: 'center', flex: 1 }
@@ -60,6 +62,7 @@ const BookGrid = observer(() => {
   const filteredBooks = author
     ? books.filter((book) => book.author === author)
     : books;
+
   /*   const rows = filteredBooks.map((book) => ({
       id: book._id,
       title: book.title,
@@ -82,7 +85,7 @@ const BookGrid = observer(() => {
         title: book.title,
         author: book.author,
         ISBN: book.ISBN,
-        loaned_to: book.loaned_to?.name || 'Disponibile'
+        loaned_to: book.loaned_to || null
       }
     )
     );
@@ -90,6 +93,66 @@ const BookGrid = observer(() => {
   // TEST TO READ A CELL VALUE
   const handleCellClick = (params: GridCellParams) => {
     console.log(params.value);
+  };
+
+  const [validationError, setValidationError] = useState('');
+
+  // newRow è un parametro di processRowUpdate, un metodo di MUI che si attiva alla modifica di una riga
+  const handleProcessRowUpdate = async (
+    newRow: GridRowModel, oldRow: GridRowModel
+  ) => {
+
+    setValidationError('');
+    console.log(`newRow: ${JSON.stringify(newRow, null, 2)}`);
+    console.log(`oldRow: ${JSON.stringify(oldRow, null, 2)}`);
+
+    if (newRow.id) {
+
+      const updatedFields: Partial<Book> = {
+        _id: newRow.id,
+        title: newRow.title,
+        author: newRow.author,
+        ISBN: newRow.ISBN,
+        loaned_to: newRow.loaned_to || null
+      };
+
+      console.log('Updated Fields', updatedFields);
+
+      try {
+
+        await updateBook(newRow.id, updatedFields);
+
+        setValidationError('');
+
+        return newRow;
+
+      } catch (error) {
+
+        console.error('Failed to update book from DataGrid:', error);
+
+        if (axios.isAxiosError(error)) {
+
+          const axiosError = error as AxiosError<{ message: string[] }>;
+
+          if (axiosError.response?.data && axiosError.response.data.message) {
+
+            const validationError = axiosError.response.data.message;
+
+            console.log(`Validation error: ${validationError.join(', ')}`);
+
+            setValidationError(`Validation error: ${validationError.join(', ')}`)
+
+          }
+        } else {
+          console.log('Non-Axios error:', error);
+        }
+        console.log(`oldRow after error: ${JSON.stringify(oldRow, null, 2)}`);
+        return oldRow;
+      }
+    } else {
+      console.error('Book ID is undefined');
+      return oldRow;
+    }
   };
 
   return (
@@ -178,8 +241,23 @@ const BookGrid = observer(() => {
             autoHeight
             onCellClick={handleCellClick}
             slots={{ toolbar: GridToolbar }}
+            processRowUpdate={handleProcessRowUpdate}
+
+            // Allo start dell'edit l'errore di validazione viene svuotato
+            onCellEditStart={() => setValidationError('')}
+
+          // Se l'edit viene fermato perché si clicca fuori dalla cella/viene premuto TAB non viene avviato l'evento impedendo il savatagglio dei dati
+          // onCellEditStop={(params: GridCellEditStopParams, event: MuiEvent) => {
+          //   if (params.reason === GridCellEditStopReasons.cellFocusOut) {
+          //     event.defaultMuiPrevented = true;
+          //   }
+          // }}
           />
         </Box>
+
+        <Typography variant="h6" align="center" sx={{ fontWeight: 'bold', color: 'red' }}>
+          {validationError}
+        </Typography>
 
       </div>
     </>
