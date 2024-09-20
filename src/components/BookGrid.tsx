@@ -124,6 +124,8 @@ const BookGrid = observer(() => {
 
         setValidationError('');
 
+        console.log('Book updated succeffully');
+
         return newRow;
 
       } catch (error) {
