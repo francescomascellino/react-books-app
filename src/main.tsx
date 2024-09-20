@@ -26,9 +26,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <BookProvider>
         <App />
-      </BookProvider>
     ),
     children: [
 
@@ -41,7 +39,7 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: (
-            <Register />
+          <Register />
         ),
       },
 
@@ -102,11 +100,13 @@ const router = createBrowserRouter([
         ],
       },
 
-      // DataGrif
+      // DataGrid
       {
         path: "/datagrid",
         element: (
+          <BookProvider>
             <DataGridPage />
+          </BookProvider>
         ),
       },
 
@@ -114,7 +114,7 @@ const router = createBrowserRouter([
       {
         path: "/notfound",
         element: (
-            <NotFound />
+          <NotFound />
         ),
       },
 
