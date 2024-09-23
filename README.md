@@ -1229,3 +1229,93 @@ Aggiungiamo una Snackbar che visualizzi in maniera elegante gli errori di valida
 
 </Snackbar>
 ```
+
+### COMPONENTE SNACKBAR CUSTOMIZZABILE PER ERRORI O MESSAGGI
+
+Creiamo un componente Snackbar definendo l'interfaccia delle proprietà che possono essere accettate e passiamole alla funzione che genererà il componente.
+```ts
+import { Snackbar, Alert } from "@mui/material";
+
+// Definiamo le props
+interface SnackBarProps {
+  AlertText: string;
+  setAlertText: (error: string) => void;
+  AlertSeverity: 'success' | 'info' | 'warning' | 'error'; // Vari tipi di severity supportati da MUI
+}
+
+// Passiamo le props al componente
+const SnackBar: React.FC<SnackBarProps> = ({ AlertText, setAlertText, AlertSeverity }) => {
+
+  return (
+    <Snackbar
+      // Doppia negazione (!!): Il primo ! inverte il valore, e il secondo ! lo riporta al valore originale in forma booleana.
+      // (primo ! = Si apre se è falso che esiste un errore, secondo ! = si apre se è falso che non esiste un errore)
+      open={!!AlertText} // Un valore booleano che determina se la snackbar è visibile o meno
+
+      // Posizionamento della Snackbar
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+
+      // ms di tempo prima dell'Auto-close della Snackbar
+      autoHideDuration={null}
+
+      // Gestione della chiusura della Snackbar
+      // _ IGNORA "event"
+      onClose={(_event, reason) => {
+        if (reason === 'clickaway') {
+          // Previene la chiusura quando si clicca altrove
+          return;
+        }
+        setAlertText('');
+      }}
+
+    >
+
+      {/* All'interno della Snackbar è presente un alert */}
+      <Alert
+
+        // Cliccare sul close dell'Alert, svuota AlertText, triggerando di conseguenza la scomparsa della Snackbar
+        onClose={() => { setAlertText('') }}
+
+        severity={AlertSeverity}
+        sx={{
+          width: '100%',
+          height: '75px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {AlertText}
+      </Alert>
+
+    </Snackbar>
+  );
+
+};
+
+export default SnackBar;
+```
+
+Inseriamo il componente nel genitore, passando le prop necessarie:
+```ts
+<SnackBar AlertText={validationError} setAlertText={setValidationError} AlertSeverity='error'/>
+```
+
+Per gestire un messaggio passato tramite ***useLocation()*** di React Router, dobbiamo prima gestire il recupero del messaggio tramite ***useState*** e ***useEffect***
+```ts
+const [locationMmessage, setLocationStateMessage] = useState<string>(location.state?.message || '');
+
+ useEffect(() => {
+  if (location.state && location.state.message) {
+    setLocationStateMessage(location.state.message);
+  } else {
+    setLocationStateMessage('');
+  }
+}, [location.state]);
+```
+```ts
+{/* Messaggio di stato */}
+<SnackBar AlertText={locationMmessage} setAlertText={setLocationStateMessage} AlertSeverity='success' />
+```
+
+
