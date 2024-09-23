@@ -1317,5 +1317,3 @@ const [locationMmessage, setLocationStateMessage] = useState<string>(location.st
 {/* Messaggio di stato */}
 <SnackBar AlertText={locationMmessage} setAlertText={setLocationStateMessage} AlertSeverity='success' />
 ```
-
-
