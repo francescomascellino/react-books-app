@@ -5,6 +5,7 @@ import { useAuthStore } from '../stores/auth/useAuthStore';
 import '../assets/css/book.css';
 import axios, { AxiosError } from 'axios';
 import { observer } from 'mobx-react-lite';
+import { Snackbar, Alert } from '@mui/material';
 
 const AddBook = observer(() => {
   const { fetchBooks, addBook, pagination } = useBookStore();
@@ -22,11 +23,11 @@ const AddBook = observer(() => {
       const newBook = await addBook({ title, author, ISBN });
       console.log('Book added successfully', newBook);
       fetchBooks(pagination?.page)
-      
+
       await fetchBooks(pagination?.page);
 
       console.log('From handleSubmit - addBook. New book added. id:', newBook._id);
-      
+
 
       navigate(`/books/${newBook._id}`, { state: { message: 'Libro aggiunto con successo' } });
 
@@ -93,11 +94,54 @@ const AddBook = observer(() => {
                 />
               </div>
               <div>
-              <button type="submit">Conferma</button>
-              <Link to="/books"><button>Annulla</button></Link>
+                <button type="submit">Conferma</button>
+                <Link to="/books"><button>Annulla</button></Link>
               </div>
             </form>
-            {validationError && <p style={{ color: 'red' }}>{validationError}</p>}
+
+            <Snackbar
+              // Doppia negazione (!!): Il primo ! inverte il valore, e il secondo ! lo riporta al valore originale in forma booleana.
+              // (primo ! = Si apre se è falso che esiste un errore, secondo ! = si apre se è falso che non esiste un errore)
+              open={!!validationError} // Un valore booleano che determina se la snackbar è visibile o meno
+
+              // Posizionamento della Snackbar
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+
+              // ms di tempo prima dell'Auto-close della Snackbar
+              autoHideDuration={null}
+
+              // Gestione della chiusura della Snackbar
+              // _ IGNORA "event"
+              onClose={(_event, reason) => {
+                if (reason === 'clickaway') {
+                  // Previene la chiusura quando si clicca altrove
+                  return;
+                }
+                setValidationError('');
+              }}
+
+            >
+
+              {/* All'interno della Snackbar è presente un alert */}
+              <Alert
+
+                // Cliccare sul close dell'Alert, svuota validationError, triggerando di conseguenza la scomparsa della Snackbar
+                onClose={() => { setValidationError('') }}
+
+                severity="error"
+                sx={{
+                  width: '100%',
+                  height: '75px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                {validationError}
+              </Alert>
+
+            </Snackbar>
+
           </>
         ) : (
           <h2>Effettua il Login per accedere al form di modifica del libro</h2>
