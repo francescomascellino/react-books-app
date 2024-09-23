@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite';
 import { useBookStore } from '../stores/book/useBookStore';
 import { useAuthStore } from '../stores/auth/useAuthStore';
@@ -11,6 +11,7 @@ import '../assets/css/book.css'
 import Pagination from '@mui/material/Pagination';
 // The Stack component manages the layout of its immediate children along the vertical or horizontal axis, with optional spacing and dividers between each child.
 import Stack from '@mui/material/Stack';
+import SnackBar from './Snackbar';
 
 // Wrappiamo il componente cob observer()
 const Book = observer(() => {
@@ -22,7 +23,7 @@ const Book = observer(() => {
   useEffect(() => {
     // Se l'utente è loggato effettua la chiamata API
     if (loginStatus) {
-      console.log('From TrashedBooks Component. Fetching Trashed Books');      
+      console.log('From TrashedBooks Component. Fetching Trashed Books');
       fetchTrashed();
     } else {
       console.log("From TrashedBooks Component. User must be logged in");
@@ -37,18 +38,20 @@ const Book = observer(() => {
     fetchTrashed(newPage);
   };
 
+  const [locationMmessage, setLocationStateMessage] = useState<string>(location.state?.message || '');
+
+  useEffect(() => {
+    if (location.state && location.state.message) {
+      setLocationStateMessage(location.state.message);
+    } else {
+      setLocationStateMessage('');
+    }
+  }, [location.state]);
+
   return (
     <>
       {/* <Navbar /> */}
       <h1>TrashedBooks.tsx</h1>
-      {/* Messaggio di stato */}
-      <div style={{ height: '70px' }}>
-        {location.state?.message &&
-          <div className="card">
-            <p style={{ color: 'green' }}>{location.state.message}</p>
-          </div>
-        }
-      </div>
 
       <div className="book-container">
         <div className="book-list">
@@ -96,6 +99,9 @@ const Book = observer(() => {
         </div>
 
       </div>
+
+      {/* Messaggio di stato */}
+      <SnackBar AlertText={locationMmessage} setAlertText={setLocationStateMessage} AlertSeverity='success' />
     </>
   )
 });

@@ -3,9 +3,10 @@ import { Snackbar, Alert } from "@mui/material";
 interface SnackBarProps {
   AlertText: string;
   setAlertText: (error: string) => void;
+  AlertSeverity: 'success' | 'info' | 'warning' | 'error'; // Vari tipi di severity supportati da MUI
 }
 
-const SnackBar: React.FC<SnackBarProps> = ({ AlertText, setAlertText }) => {
+const SnackBar: React.FC<SnackBarProps> = ({ AlertText, setAlertText, AlertSeverity }) => {
 
   return (
     <Snackbar
@@ -37,7 +38,7 @@ const SnackBar: React.FC<SnackBarProps> = ({ AlertText, setAlertText }) => {
         // Cliccare sul close dell'Alert, svuota AlertText, triggerando di conseguenza la scomparsa della Snackbar
         onClose={() => { setAlertText('') }}
 
-        severity="error"
+        severity={AlertSeverity}
         sx={{
           width: '100%',
           height: '75px',

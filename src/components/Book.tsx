@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useBookStore } from '../stores/book/useBookStore';
@@ -12,6 +12,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { Button } from '@mui/material';
 import { runInAction } from 'mobx';
+import SnackBar from './Snackbar';
 
 // Wrappiamo il componente cob observer()
 const Book = observer(() => {
@@ -74,18 +75,20 @@ const Book = observer(() => {
     }
   };
 
+  const [locationMmessage, setLocationStateMessage] = useState<string>(location.state?.message || '');
+
+  useEffect(() => {
+    if (location.state && location.state.message) {
+      setLocationStateMessage(location.state.message);
+    } else {
+      setLocationStateMessage('');
+    }
+  }, [location.state]);
+
   return (
     <>
       {/* <Navbar /> */}
       <h1>Book.tsx</h1>
-      {/* Messaggio di stato */}
-      <div style={{ height: '70px' }}>
-        {location.state?.message &&
-          <div className="card">
-            <p style={{ color: 'green' }}>{location.state.message}</p>
-          </div>
-        }
-      </div>
 
       <div className="book-container">
         <div className="book-list">
@@ -139,6 +142,9 @@ const Book = observer(() => {
         </div>
 
       </div>
+
+      {/* Messaggio di stato */}
+      <SnackBar AlertText={locationMmessage} setAlertText={setLocationStateMessage} AlertSeverity='success' />
     </>
   )
 });

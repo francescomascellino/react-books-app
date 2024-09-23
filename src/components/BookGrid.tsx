@@ -258,7 +258,7 @@ const BookGrid = observer(() => {
           />
         </Box>
 
-        <SnackBar AlertText={validationError} setAlertText={setValidationError} />
+        <SnackBar AlertText={validationError} setAlertText={setValidationError} AlertSeverity='error'/>
 
       </div>
     </>

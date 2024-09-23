@@ -45,6 +45,7 @@ const SingleBook = observer(() => {
     try {
       await softDeleteBook(bookID!);
       console.log('Book moved to trash successfully');
+      setValidationError('');
       navigate(`/books`, { state: { message: 'Libro spostato nel cestino con successo' } });
     } catch (error) {
       console.error('Failed to move book to trash:', error);
@@ -79,7 +80,7 @@ const SingleBook = observer(() => {
 
         <div>
 
-        <SnackBar AlertText={validationError} setAlertText={setValidationError} />
+        <SnackBar AlertText={validationError} setAlertText={setValidationError} AlertSeverity='error'/>
         </div>
       </div>
     </>

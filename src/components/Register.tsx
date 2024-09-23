@@ -31,6 +31,8 @@ const Register = observer(() => {
 
         await login(username, password);
 
+        setValidationError('');
+
         navigate(`/`, { state: { message: 'Utente creato con successo' } });
       }
 
@@ -112,7 +114,7 @@ const Register = observer(() => {
 
           </form>
 
-          <SnackBar AlertText={validationError} setAlertText={setValidationError} />
+          <SnackBar AlertText={validationError} setAlertText={setValidationError} AlertSeverity='error'/>
         </>
 
       </div>

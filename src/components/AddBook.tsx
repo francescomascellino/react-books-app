@@ -28,6 +28,7 @@ const AddBook = observer(() => {
 
       console.log('From handleSubmit - addBook. New book added. id:', newBook._id);
 
+      setValidationError('');
 
       navigate(`/books/${newBook._id}`, { state: { message: 'Libro aggiunto con successo' } });
 
@@ -99,7 +100,7 @@ const AddBook = observer(() => {
               </div>
             </form>
 
-            <SnackBar AlertText={validationError} setAlertText={setValidationError} />
+            <SnackBar AlertText={validationError} setAlertText={setValidationError} AlertSeverity='error'/>
 
           </>
         ) : (

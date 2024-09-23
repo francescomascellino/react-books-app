@@ -125,7 +125,7 @@ const EditBook = observer(() => {
               </div>
             </form>
 
-            <SnackBar AlertText={validationError} setAlertText={setValidationError} />
+            <SnackBar AlertText={validationError} setAlertText={setValidationError} AlertSeverity='error'/>
           </>
         ) : (
           <h2>Effettua il Login per accedere al form di modifica del libro</h2>

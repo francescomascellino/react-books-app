@@ -45,6 +45,7 @@ const SingleTrashedBook = observer(() => {
     try {
       await deleteBook(bookID!);
       console.log('Book deleted successfully');
+      setValidationError('');
       navigate(`/trashed`, { state: { message: 'Libro eliminato definitivamente con successo' } });
     } catch (error) {
       console.error('Failed to delete book:', error);
@@ -55,6 +56,7 @@ const SingleTrashedBook = observer(() => {
     try {
       await restoreBook(bookID!);
       console.log('Book restored successfully');
+      setValidationError('');
       navigate(`/trashed`, { state: { message: 'Libro ripristinato con successo' } });
     } catch (error) {
       console.error('Failed to restore book:', error);
@@ -88,7 +90,7 @@ const SingleTrashedBook = observer(() => {
           <h2>Effettua il Login per accedere ai dettagli del libro</h2>
         )}
 
-        <SnackBar AlertText={validationError} setAlertText={setValidationError} />
+<SnackBar AlertText={validationError} setAlertText={setValidationError} AlertSeverity='error'/>
       </div>
     </>
 
