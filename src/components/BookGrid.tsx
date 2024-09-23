@@ -1,4 +1,4 @@
-import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, TextField, Typography } from "@mui/material";
+import { Alert, Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Snackbar, Switch, TextField, Typography } from "@mui/material";
 import { GridColDef, DataGrid, GridCellParams, GridToolbar, GridRowModel } from "@mui/x-data-grid";
 import SearchIcon from '@mui/icons-material/Search';
 import { observer } from "mobx-react-lite";
@@ -257,9 +257,48 @@ const BookGrid = observer(() => {
           />
         </Box>
 
-        <Typography variant="h6" align="center" sx={{ fontWeight: 'bold', color: 'red' }}>
-          {validationError}
-        </Typography>
+        <Snackbar
+          // Doppia negazione (!!): Il primo ! inverte il valore, e il secondo ! lo riporta al valore originale in forma booleana.
+          // (primo ! = Si apre se è falso che esiste un errore, secondo ! = si apre se è falso che non esiste un errore)
+          open={!!validationError} // Un valore booleano che determina se la snackbar è visibile o meno
+
+          // Posizionamento della Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+
+          // ms di tempo prima dell'Auto-close della Snackbar
+          autoHideDuration={null}
+
+          // Gestione della chiusura della Snackbar
+          // _ IGNORA "event"
+          onClose={(_event, reason) => {
+            if (reason === 'clickaway') {
+              // Previene la chiusura quando si clicca altrove
+              return;
+            }
+            setValidationError('');
+          }}
+
+        >
+
+          {/* All'interno della Snackbar è presente un alert */}
+          <Alert
+
+            // Cliccare sul close dell'Alert, svuota validationError, triggerando di conseguenza la scomparsa della Snackbar
+            onClose={() => { setValidationError('') }}
+
+            severity="error"
+            sx={{
+              width: '100%',
+              height: '75px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {validationError}
+          </Alert>
+
+        </Snackbar>
 
       </div>
     </>

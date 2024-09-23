@@ -1038,3 +1038,194 @@ const rows = filteredBooks
     )
   );
 ```
+
+## MUI TOGGLE
+
+Aggiungiamo un toggle per filtrare i libri assegnati tramite toggle.
+Creiamo un useState che gestisca l'attivazione del filtro
+```ts
+const [loansToggle, setLoanedToggle] = useState(false);
+
+const handleLoanedToggleChange = () => { setLoanedToggle(!loansToggle) };
+```
+
+In maniera similare al filtro sui titoli, inseriamo un metodo filter che legga lo state del toggle.
+```ts
+const rows = filteredBooks
+
+  // Se è vero che toggle è false (!toggle) allora non applica filtri effettivi 
+  // oppure (||) se toggle è true si verifica la seconda condizione in cui vengono filtrati i libri in base alla presenza del un nome di un affittuario
+  .filter((book) => !loansToggle || (loansToggle && book.loaned_to?.name))
+
+  // Filtro sui libri che contengono la query di ricerca
+  .filter((book) => !searchTitle || book.title.toLowerCase().includes(searchTitle.trim().toLowerCase()))
+
+  .map((book) => (
+    {
+      id: book._id,
+      title: book.title,
+      author: book.author,
+      ISBN: book.ISBN,
+      loaned_to: book.loaned_to || null
+    }
+  )
+);
+```
+
+Importiamo lo Switch fa MUI e aggiungiamo lo stile.
+Possiamo usare il componente ***FormControlLabel*** per assegnare eetichette a componenti Switch, Radio e Checkbox.
+```ts
+<FormControlLabel
+  control={
+    <Switch
+      size="small"
+      color="warning"
+      checked={loansToggle}
+      onChange={handleLoanedToggleChange}
+    />
+  }
+
+  label={
+    // Assegna stile al font della label e margine sx dallo switch
+    <Typography align="left" sx={{ fontSize: 'small', ml: 2 }}>
+      Mostra assegnati</Typography>
+      }
+
+      // Margine SX SWITCH
+      sx={{ ml: 2 }}
+    />
+```
+
+## Edit delle Celle
+
+Aggiungiamo la proprietà ***editable: true*** alle celle (o alle righe) che vogliamo rendere editabili
+```ts
+const columns: GridColDef[] = [
+  { field: 'title', headerName: 'Titolo', headerAlign: 'center', flex: 2, editable: true },
+   [...]
+];
+```
+
+Creiamo uno useState che conservi gli errori di validazione
+
+const [validationError, setValidationError] = useState('');
+
+Quando una cella viene modificata viene richiamato il metoto ***processRowUpdate*** che si attiva alla modifica di una riga.
+Creiamo una funzione che gestisca le azioni da compiere quando ***processRowUpdate*** viene invocato.
+
+```ts
+// newRow è un parametro di processRowUpdate, un metodo di MUI che si attiva alla modifica di una riga
+const handleProcessRowUpdate = async (
+  newRow: GridRowModel, oldRow: GridRowModel
+) => {
+
+  setValidationError(''); // Svuotiamo eventuali messaggi
+  console.log(`newRow: ${JSON.stringify(newRow, null, 2)}`);
+  console.log(`oldRow: ${JSON.stringify(oldRow, null, 2)}`);
+
+  if (newRow.id) {
+
+    // Assegnamo i valori modificati a updatedFields in modo da poterli inviare al backend
+    const updatedFields: Partial<Book> = {
+      _id: newRow.id,
+      title: newRow.title,
+      author: newRow.author,
+      ISBN: newRow.ISBN,
+      loaned_to: newRow.loaned_to || null
+    };
+
+    console.log('Updated Fields', updatedFields);
+
+    try {
+
+      await updateBook(newRow.id, updatedFields);
+
+      setValidationError('');
+
+      console.log('Book updated succeffully');
+
+      return newRow; // Se tutto va bene torniamo la nuova riga in modo da aggiornare i dati visualizzati
+
+    } catch (error) {
+
+      // Gestiamo gli errori ed eventualmente ritorniamo 'oldRow' che contiene i valori originali prima della modfifica
+
+      console.error('Failed to update book from DataGrid:', error);
+
+      if (axios.isAxiosError(error)) {
+
+        const axiosError = error as AxiosError<{ message: string[] }>;
+
+        if (axiosError.response?.data && axiosError.response.data.message) {
+
+          const validationError = axiosError.response.data.message;
+
+          console.log(`Validation error: ${validationError.join(', ')}`);
+
+          setValidationError(`Validation error: ${validationError.join(', ')}`)
+
+        }
+
+      } else {
+        console.log('Non-Axios error:', error);
+      }
+
+      console.log(`oldRow after error: ${JSON.stringify(oldRow, null, 2)}`);
+      return oldRow;
+    }
+
+  } else {
+    console.error('Book ID is undefined');
+    return oldRow;
+  }
+};
+```
+
+## MUI SNACKBAR E ALERT
+
+Aggiungiamo una Snackbar che visualizzi in maniera elegante gli errori di validazione
+```ts
+<Snackbar 
+  // Doppia negazione (!!): Il primo ! inverte il valore, e il secondo ! lo riporta al valore originale in forma booleana.
+  // (primo ! = Si apre se è falso che esiste un errore, secondo ! = si apre se è falso che non esiste un errore)
+   open={!!validationError} // Un valore booleano che determina se la snackbar è visibile o meno
+
+  // Posizionamento della Snackbar
+  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+  
+  autoHideDuration={null} // ms di tempo prima dell'Auto-close della Snackbar
+
+  // Gestione della chiusura della Snackbar
+  // _ IGNORA "event"
+  onClose={(_event, reason) => {
+    if (reason === 'clickaway') {
+      // Previene la chiusura quando si clicca altrove
+      return;
+    }
+
+    setValidationError(''); // Svuota gli errori
+  }}
+>
+
+  // All'interno della Snackbar è presente un alert
+  <Alert
+
+    // Cliccare sul close dell'Alert, svuota validationError, triggerando di conseguenza la scomparsa della Snackbar
+    onClose={() => { setValidationError('') }}
+
+    // Stile dell'Alert
+    severity="error"
+    sx={{
+      width: '100%',
+      height: '75px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
+    // Contenuto dell'Alert
+    {validationError}
+  </Alert>
+
+</Snackbar>
+```
